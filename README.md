@@ -1,6 +1,8 @@
 # To-do List 
-- [] Cambiare django file
-- [] Connessione bridge con Url server
+- [] Testare e inviare segnali di allarme dal bridge e arduino
+- [] Segnale allarme: Apertura e chiusura frigo --> segnale sonoro
+- [] Segnale allarme: Cambi di temperatura frigo chiuso --> messaggio telegram
+- [] Creazione database per tenere traccia dei dati
 - [] ...
 
 
