@@ -16,8 +16,23 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
+from config.views import *
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path("register/", UserCreateView.as_view(), name="register"),
+    path("login/", auth_views.LoginView.as_view(), name="login"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
+
+    path("registerop/",OperatorCreateView.as_view(), name="registerop"),
+
+    path('', include('main.urls')),
 ]
+# Enable if we need to access media
+# The following works only if DEBUG==True. We use UNPREFIXED_MEDIA_URL, to make it work from Apache
+# when running from a subfolder which provides SCRIPT_NAME to the WSGI application
+urlpatterns += static(settings.UNPREFIXED_MEDIA_URL, document_root=settings.MEDIA_ROOT)

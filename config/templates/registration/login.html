@@ -1,0 +1,29 @@
+{% extends 'basebs.html' %}
+
+{% load crispy_forms_tags %} 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+
+{% block title %} Login come Lettore{% endblock %} 
+
+{% block header1 %}
+  <h1>Pagina di Login</h1>
+  <p>Si prega di compilare i campi necessari</p> 
+{% endblock %}
+
+{% block content %} 
+
+{% if "notok" in request.GET.auth %}
+<div class="alert alert-danger" role="alert">
+  Si è arrivati qui in quanto non si dispone dei permessi necessari per il servizio scelto!
+</div>
+{% endif %}
+
+<form method="post"> {% csrf_token %}
+
+  {{form | crispy}}
+  
+  <input type="submit" class="btn btn-success" value="Esegui login">
+  
+  </form>
+
+{% endblock %}
