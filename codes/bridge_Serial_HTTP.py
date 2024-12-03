@@ -10,63 +10,70 @@ import configparser
 class Bridge():
 
 	def __init__(self):
+		self.config = configparser.ConfigParser()
+		self.config.read('config.ini')
 		self.setupSerial()
 
 	def setupSerial(self):
 		# open serial port
-		self.ser = serial.Serial()
-		print("list of available ports: ")
-		ports = serial.tools.list_ports.comports()
-		for port in ports:
-			print (port.description)
-			if 'arduino' in port.description.lower():
-				self.portname = port.device
+		self.ser = None
 
-		if self.portname is not None:
-			try:
-				print("\ntry connecting to " + self.portname)
-				self.ser.port = self.portname
-				self.ser.baudrate = 9600
-				self.ser.timeout = 0
+		if not self.config.getboolean("Serial","UseDescription", fallback=False):
+			self.portname = self.config.get("Serial","PortName", fallback="COM1")
+		else:
+			print("list of available ports: ")
+			ports = serial.tools.list_ports.comports()
 
-				print(self.portname + " connected!")
-			except:
-				print("unable to connect to " + self.portname)
-				self.ser.__del__()
+			for port in ports:
+				print (port.device)
+				print (port.description)
+				if self.config.get("Serial","PortDescription", fallback="arduino").lower() \
+						in port.description.lower():
+					self.portname = port.device
 
 		try:
-			self.ser.open()
+			if self.portname is not None:
+				print ("connecting to " + self.portname)
+				self.ser = serial.Serial(self.portname, 9600, timeout=0)
+				print("CONNESSO alla porta")
 		except:
-			print("Access denied!")
+			print("ECCEZIONE")
+			self.ser = None
+
+		# self.ser.open()
+
 		# internal input buffer from serial
 		self.inbuffer = []
 
 
 	def loop(self):
 		lasttime = time.time()
+		connect = 0
 		while(True):
 				current_time = time.time()
 				#look for a byte from serial
 				if not self.ser is None:
-					while self.ser.in_waiting > 0:
+					while self.ser.inWaiting() != 0:
+
 						# data available from the serial port
 						lastchar = self.ser.read(1)
-						if lastchar == b'\xfe': #EOL
-							print("last char")
-							# Only process data if 2 seconds have passed
-							if current_time - lasttime >= 2:
+
+						#se viene inviato il carattere di inizio
+						if connect == 0 and lastchar == b'\xff':
+							print("Connesso, leggo i dati...")
+							connect = 1
+							continue
+
+						if connect == 1:
+							if lastchar == b'\xfe': #EOL
+								connect = 0
 								print("\nValue received")
-								self.useData()
+								print(self.inbuffer)
+								# self.useData() mettere a posto questa <-----------
+								self.inbuffer =[]
+							else:
+								self.inbuffer.append(lastchar)
 
-								# Get data and send appropriate command
-
-								# Update lasttime
-								lasttime = current_time
-
-							self.inbuffer = []
-						else:
-							# append
-							self.inbuffer.append(lastchar)
 				# If no serial data, still check if 2 seconds have passed
 				elif current_time - lasttime >= 2:
 					print("no data")
