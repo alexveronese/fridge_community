@@ -69,8 +69,8 @@ class Bridge():
 								connect = 0
 								print("\nValue received")
 								print(self.inbuffer)
-								# self.useData() mettere a posto questa <-----------
-								self.inbuffer =[]
+								self.useData()
+								self.inbuffer = []
 							else:
 								self.inbuffer.append(lastchar)
 
@@ -87,10 +87,6 @@ class Bridge():
 			print("inbuffer short")
 			return False
 		# split parts
-		if self.inbuffer[0] != b'\xff':
-			print(int.from_bytes(self.inbuffer[0], byteorder='little'))
-			print("uncorrect first char")
-			return False
 
 		#numval = int.from_bytes(self.inbuffer[1], byteorder='little')
 		#print(numval)
