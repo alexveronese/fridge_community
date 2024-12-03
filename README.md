@@ -4,7 +4,6 @@
 - [] Segnale allarme: Cambi di temperatura frigo chiuso --> messaggio telegram
 - [] Creazione database per tenere traccia dei dati
 - [] Aggiungere ID arduino
-- [] Usedata() nel bridge da un errore
 - [] ...
 
 
