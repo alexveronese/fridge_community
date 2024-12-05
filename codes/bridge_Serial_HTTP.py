@@ -1,4 +1,3 @@
-### author: Roberto Vezzani
 
 import serial
 import serial.tools.list_ports
@@ -12,7 +11,19 @@ class Bridge():
 	def __init__(self):
 		self.config = configparser.ConfigParser()
 		self.config.read('config.ini')
+		#self.postdata(0, 2)  prova post
 		self.setupSerial()
+
+	def postdata(self, i, val):
+		if i > 0:
+			return
+		url = self.config.get("DJANGO","Url") + "/data"
+		myobj = {'value': val}
+		headers = {'X-AIO-Key': self.config.get("DJANGO","X-AIO-Key") }
+		print ("> Sending to " + url)
+
+		x = requests.post(url, data=myobj, headers=headers)
+		print(x.json())
 
 	def setupSerial(self):
 		# open serial port
