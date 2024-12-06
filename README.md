@@ -3,7 +3,8 @@
 - [] Segnale allarme: Apertura e chiusura frigo --> segnale sonoro
 - [] Segnale allarme: Cambi di temperatura frigo chiuso --> messaggio telegram
 - [] Creazione database per tenere traccia dei dati
-- [] Aggiungere ID arduino
+- [] Lanciare il server sulla rete wi-fi
+- [] Aggiungere ID arduino ai byte inviati in seriale
 - [] ...
 
 
