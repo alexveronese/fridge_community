@@ -1,0 +1,26 @@
+{% extends 'basebs.html' %}
+
+{% block title %} {{view.title}} {% endblock %} 
+
+{% load crispy_forms_tags %} 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+
+{% block header1 %}
+  <h1> {{view.title}} </h1>
+{% endblock %}
+
+{% block content %} 
+
+<br>
+
+<div class="d-flex justify-content-center">
+
+  {% crispy form %}
+
+</div>
+<br>
+
+
+<br>
+
+{% endblock %}

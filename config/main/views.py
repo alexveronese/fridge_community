@@ -1,5 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import DetailView, TemplateView, ListView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, TemplateView, ListView
+from braces.views import GroupRequiredMixin
+from main.forms import CreateFridgeForm
 
 TEMP_TRESHOLD = 8
 UMI_TRESHOLD = 80
@@ -7,6 +10,15 @@ UMI_TRESHOLD = 80
 
 class HomeView(TemplateView):
     template_name = 'main/home.html'
+
+
+class CreateFridgeView(GroupRequiredMixin, CreateView):
+    group_required = ["Operators"]
+    title = "Register new Fridge"
+    form_class = CreateFridgeForm
+    template_name = "main/create_entry.html"
+    success_url = reverse_lazy("main:home")
+
 
 def process_data(request):
     if request.method == 'POST':
