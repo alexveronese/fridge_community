@@ -18,6 +18,8 @@ int potentiometerValue = 0;       // power consumption
 
 unsigned long timestamp;
 
+const byte arduinoID = 0x01;      // unique ID Arduino: change this for each device
+
 void setup() {
   Serial.begin(9600);
   timestamp = millis();
@@ -67,14 +69,15 @@ void loop() {
     //Serial.println(humidityOut); Serial.println("%");
 
     
-    Serial.write(0xFF);   //254: init char
+    Serial.write(0xFF);              //255: init char
+    Serial.write(arduinoID);         //ID Arduino 
     Serial.write(buttonState);
     Serial.write(conv_temperatureIn);
     Serial.write(conv_humidityIn);
     Serial.write(conv_temperatureOut);
     //Serial.write(conv_humidityOut);
     Serial.write(potentiometerValue);
-    Serial.write(0xFE);   //255: end char
+    Serial.write(0xFE);               //254: end char
   
     timestamp = millis();
   }
