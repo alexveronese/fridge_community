@@ -1,0 +1,77 @@
+{% extends 'basebs.html' %}
+
+{% block title %} Fridge List {% endblock %}
+
+{% block header1 %}
+  <h1>Fridge List</h1>
+{% endblock %}
+
+{% block content %}
+
+    <style>
+    #search_string {
+      background-position: 10px 12px;
+      background-repeat: no-repeat;
+      width: 100%;
+      font-size: 16px;
+      padding: 12px 20px 12px 40px;
+      border: 1px solid #ddd;
+      margin-bottom: 12px;
+    }
+    </style>
+
+    <br>
+    <input type="text" id="search_string" placeholder="Cerca per nome..." title="Cerca">
+    <br>
+    <br>
+
+    {% if object_list|length == 0 %}
+        <h2>No registered fridge found</h2>
+    {% else %}
+        <h2> {{ view.title }} {% if view.title == "Fridge List" %} {{ object_list.count }} {% if object_list.count != 1 %}fridges{% else %}fridge{% endif %} {% endif %}</h2>
+    {% endif %}
+    <br>
+
+    <div class="table-responsive">
+        <table class="table-striped-" id="fridge_list" >
+            <tbody>
+                {% for l in object_list %}
+                <tr>
+                    <td>
+                        <a>{{ l.serial_number }}</a>
+                    <td>
+                    <td>
+                        <a href="{% url 'main:home' %}" class="btn btn-info" role="button">Select</a>
+                    <td>
+                <tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    {%endfor%}
+
+    <br>
+
+    <script>
+      const searchInput = document.getElementById('search_string');
+      const tableBody = document.querySelector('tbody');
+
+      searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const rows = tableBody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+          const firstTd = row.querySelector('td:first-child');
+          const anchorText = firstTd.querySelector('a').textContent.toLowerCase();
+
+          if (anchorText.includes(searchTerm)) {
+            row.style.display = 'table-row';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    </script>
+
+{% endblock %}

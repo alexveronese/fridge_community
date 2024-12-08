@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, TemplateView, ListView
 from braces.views import GroupRequiredMixin
 from main.forms import CreateFridgeForm
+from .models import *
 
 TEMP_TRESHOLD = 8
 UMI_TRESHOLD = 80
@@ -18,6 +19,17 @@ class CreateFridgeView(GroupRequiredMixin, CreateView):
     form_class = CreateFridgeForm
     template_name = "main/create_entry.html"
     success_url = reverse_lazy("main:home")
+
+
+class FridgeListView(ListView):
+    title = "Fridge List"
+    model = Fridge
+    template_name = "main/fridge_list.html"
+
+    def get_queryset(self):
+        return Fridge.objects.all().order_by("id")
+
+
 
 
 def process_data(request):
