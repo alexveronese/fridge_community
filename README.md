@@ -4,7 +4,7 @@
 - [] Creare webhook server-bot --> il server invia i dati al bot per notificare l'errore
 - [] Creazione database per tenere traccia dei dati
 - [] Lanciare il server sulla rete wi-fi
-- [] Aggiungere ID arduino ai byte inviati in seriale
+- [x] Aggiungere ID arduino ai byte inviati in seriale
 - [] ...
 
 
