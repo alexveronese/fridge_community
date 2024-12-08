@@ -65,13 +65,13 @@
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav">
 
-        {% if "Doctors" in user.groups.all.0.name or user.is_staff %}
+        {% if "Operators" in user.groups.all.0.name or user.is_staff %}
 
         {% endif %}
 
         {% if user.is_staff %}
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'registerdoc' %}">Iscrivi un Dottore</a>
+                <a class="nav-link" href="{% url 'registerop' %}">Register new Operator</a>
             </li>
         {% endif %}
 
