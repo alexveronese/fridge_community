@@ -3,6 +3,7 @@
 - [] Segnale allarme: Apertura e chiusura frigo --> segnale sonoro
 - [] Creare webhook server-bot --> il server invia i dati al bot per notificare l'errore
 - [] Registrazione frigo dall'utente
+- [] Definire l'ordine in cui passiamo i dati
 - [x] Regsitrazione frigo dall'operatore
 - [x] Creazione database per tenere traccia dei dati
 - [x] Lanciare il server sulla rete wi-fi
