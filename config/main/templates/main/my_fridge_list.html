@@ -1,0 +1,38 @@
+{% extends 'basebs.html' %}
+
+{% block title %} Fridge List {% endblock %}
+
+{% block header1 %}
+  <h1>Fridge List</h1>
+{% endblock %}
+
+{% block content %}
+    {% if object_list|length == 0 %}
+        <h2>No registered fridge found</h2>
+    {% else %}
+        <h2> {{ view.title }}: {{ object_list.count }} </h2>
+    {% endif %}
+    <br>
+
+    <div class="table-responsive">
+        <table class="table-striped-" id="fridge_list" >
+            <tbody>
+                {% for l in object_list %}
+                <tr>
+                    <td>
+                        <a>{{ l.serial_number }}</a>
+                    <td>
+                    <td>
+                        <a href="{% url 'main:home' %}" class="btn btn-info" role="button">Select</a>
+                    <td>
+                <tr>
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    {%endfor%}
+
+    <br>
+
+{% endblock %}

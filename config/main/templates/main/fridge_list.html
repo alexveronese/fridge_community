@@ -20,6 +20,26 @@
     }
     </style>
 
+    {% if "err" in request.GET.conf  %}
+        <div id="info" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p>You've typed a wrong secret number or the fridge is already assigned!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function(){
+                $("#info").modal('show');
+            });
+        </script>
+    {% endif %}
+
     <br>
     <input type="text" id="search_string" placeholder="Cerca per nome..." title="Cerca">
     <br>
@@ -41,7 +61,7 @@
                         <a>{{ l.serial_number }}</a>
                     <td>
                     <td>
-                        <a href="{% url 'main:home' %}" class="btn btn-info" role="button">Select</a>
+                        <a href="{% url 'main:add_fridge' l.pk %}" class="btn btn-info" role="button">Select</a>
                     <td>
                 <tr>
             </tbody>

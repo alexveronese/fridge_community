@@ -7,4 +7,6 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home'),
     path("regfridge/", CreateFridgeView.as_view(), name="register_fridge"),
     path("fridgelist/", FridgeListView.as_view(), name="fridge_list"),
+    path("addfridge/<pk>/", addFridge, name="add_fridge"),
+    path("myfridgelist/", MyFridgeListView.as_view(), name="my_fridge_list"),
 ]
