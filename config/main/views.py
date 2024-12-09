@@ -5,8 +5,6 @@ from braces.views import GroupRequiredMixin
 from main.forms import CreateFridgeForm
 from .models import *
 
-TEMP_TRESHOLD = 8
-UMI_TRESHOLD = 80
 
 
 class HomeView(TemplateView):
@@ -34,13 +32,8 @@ class FridgeListView(ListView):
 
 def process_data(request):
     if request.method == 'POST':
-        data = []# prendi i dati dalla post
-        alarm(data)
+        data = request.form.to_dict()
+        values = data.get("value")
+        print(f"Dati ricevuti: {data}") # debug
 
-def alarm(sensors):
-    # Dobbiamo decidere un ordine prestabilito dato che sappiamo solo il dato
-    if sensors[0] >= TEMP_TRESHOLD:
-        pass    # do something
 
-    if sensors[1] >= UMI_TRESHOLD:
-        pass    # do something
