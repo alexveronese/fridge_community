@@ -78,7 +78,15 @@ def process_data(request):
         if not fridge:
             return print(f'fridge {fridge_id} not exist')
 
-
+        sfeed = SensorFeed(
+            fridge=fridge_id,
+            door=button_state,
+            int_temp=temp_in,
+            int_hum=hum_in,
+            ext_temp=temp_out,
+            power_consumption=pot_val
+        )
+        sfeed.save()
 
         print(f"Dati ricevuti: {data}") # debug
 
