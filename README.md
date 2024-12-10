@@ -1,4 +1,5 @@
-# To-do List 
+# To-do List
+- [] spostare la post del bot telegram dal bridge sul server
 - [] Testare e inviare segnali di allarme dal bridge e arduino
 - [] Segnale allarme: Apertura e chiusura frigo --> segnale sonoro
 - [] Creare webhook server-bot --> il server invia i dati al bot per notificare l'errore
