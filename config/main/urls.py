@@ -9,4 +9,5 @@ urlpatterns = [
     path("fridgelist/", FridgeListView.as_view(), name="fridge_list"),
     path("addfridge/<pk>/", addFridge, name="add_fridge"),
     path("myfridgelist/", MyFridgeListView.as_view(), name="my_fridge_list"),
+    path("data/", process_data, name="process_data")
 ]

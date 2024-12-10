@@ -65,8 +65,21 @@ class MyFridgeListView(LoginRequiredMixin, ListView):
 
 def process_data(request):
     if request.method == 'POST':
-        data = request.form.to_dict()
-        values = data.get("value")
+        data = request.POST.dict()
+        fridge_id = data.get('id')
+        button_state = data.get('button_state')
+        temp_in = data.get('temp_in')
+        hum_in = data.get('hum_in')
+        temp_out = data.get('temp_out')
+        pot_val = data.get('pot_val')
+        alarm = data.get('alarm')
+
+        fridge = Fridge.objects.filter(id=fridge_id)
+        if not fridge:
+            return print(f'fridge {fridge_id} not exist')
+
+
+
         print(f"Dati ricevuti: {data}") # debug
 
 

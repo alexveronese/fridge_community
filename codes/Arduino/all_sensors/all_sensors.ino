@@ -91,6 +91,7 @@ void loop() {
     //Serial.println(temperatureOut); Serial.print("°C, ");
     //Serial.println(humidityOut); Serial.println("%");
 
+    //keep this order, if you change it, check order in bridge_Serial_HTTP
     Serial.write(0xFF);              //255: init char
     Serial.write(arduinoID);         //ID Arduino 
     Serial.write(buttonState);
