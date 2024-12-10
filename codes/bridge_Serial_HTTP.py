@@ -17,6 +17,7 @@ class Bridge():
         if len(val) <= 6:
             return print("values missing")
         url = self.config.get("DJANGO", "Url") + "/data"
+        bot_url = self.config.get("TELEGRAM", "Url")
         myobj = {'id':val[0],
                  'button_state': val[1],
                  'temp_in': val[2],
@@ -29,6 +30,8 @@ class Bridge():
 
         x = requests.post(url, data=myobj, headers=headers)
         print(x.json())
+        y = requests.post(bot_url, data=myobj, headers=headers)
+        print(y.json())
 
     def setupSerial(self):
         # open serial port
