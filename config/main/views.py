@@ -74,7 +74,7 @@ def process_data(request):
         pot_val = data.get('pot_val')
         alarm = data.get('alarm')
 
-        fridge = Fridge.objects.filter(id=fridge_id)
+        fridge = get_object_or_404(Fridge, pk=fridge_id)
         if not fridge:
             return print(f'fridge {fridge_id} not exist')
 
