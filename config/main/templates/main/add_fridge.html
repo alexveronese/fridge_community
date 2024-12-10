@@ -10,13 +10,10 @@
 {% endblock %}
 
 {% block content %} 
-
+<h2>Fridge N°: {{ fridge.serial_number }}</h2>
 <br>
 
 <div class="d-flex justify-content-center">
-    <h2>Fridge N°: {{ fridge.serial_number }}</h2>
-    <br>
-    <br>
     {% crispy form %}
 </div>
 <br>
