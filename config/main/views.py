@@ -1,5 +1,6 @@
 from typing import Any
 
+import requests
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
@@ -88,6 +89,12 @@ def process_data(request):
         )
         sfeed.save()
 
-        print(f"Dati ricevuti: {data}") # debug
+        # alarm
+        url = "https://api.telegram.org/bot7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
+        if alarm[0]:
+            # temperatureIN too high
+            x = requests.post(url + "/notify", data=sfeed.int_temp) # cambiare nome "/notify" con metodo del bot
 
+
+        print(f"Dati ricevuti: {data}") # debug
 

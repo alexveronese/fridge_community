@@ -30,8 +30,7 @@ class Bridge():
 
         x = requests.post(url, data=myobj, headers=headers)
         print(x.json())
-        y = requests.post(bot_url, data=myobj, headers=headers)
-        print(y.json())
+
 
     def setupSerial(self):
         # open serial port
