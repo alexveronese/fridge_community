@@ -4,7 +4,7 @@
 - [] Creare webhook server-bot --> il server invia i dati al bot per notificare l'errore
 - [] creare istanza sensorFeed con i dati ricevuti in process_data()
 - [] fix serial number lenght (0-255)
-- [] guardare come inserire grafici/dashboard
+- [] guardare come inserire grafici/dashboard (AJAX)
 - [x] Definire l'ordine in cui passiamo i dati
 - [x] Registrazione frigo dall'utente
 - [x] Regsitrazione frigo dall'operatore
