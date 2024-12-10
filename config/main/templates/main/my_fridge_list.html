@@ -14,25 +14,16 @@
     {% endif %}
     <br>
 
-    <div class="table-responsive">
-        <table class="table-striped-" id="fridge_list" >
-            <tbody>
-                {% for l in object_list %}
-                <tr>
-                    <td>
-                        <a>{{ l.serial_number }}</a>
-                    <td>
-                    <td>
-                        <a href="{% url 'main:home' %}" class="btn btn-info" role="button">Select</a>
-                    <td>
-                <tr>
-            </tbody>
-        </table>
-    </div>
 
-    <br>
-    {%endfor%}
-
-    <br>
+    <table class="table table-borderless" id="fridge_list">
+        <tbody>
+            {% for l in object_list %}
+                <tr>
+                    <td>{{ l.serial_number }}</td>
+                    <td><a href="{% url 'main:home' %}" class="btn btn-info" role="button">Select</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
