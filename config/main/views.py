@@ -6,7 +6,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, TemplateView, ListView
 from django.contrib.auth.decorators import login_required
 from braces.views import GroupRequiredMixin, LoginRequiredMixin
-from main.forms import CreateFridgeForm, AddFridgeForm
+from .forms import CreateFridgeForm, AddFridgeForm
 from .models import *
 
 
