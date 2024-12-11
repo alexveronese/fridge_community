@@ -1,6 +1,7 @@
 from typing import Any
 
 import requests
+from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
@@ -78,6 +79,13 @@ def process_data(request):
         fridge = get_object_or_404(Fridge, pk=fridge_id)
         if not fridge:
             return print(f'fridge {fridge_id} not exist')
+        try:
+            temp_in = int(temp_in)
+            hum_in = int(hum_in)
+            temp_out = int(temp_out)
+            pot_val = int(pot_val)
+        except ValueError:
+            return Exception("Errore dati")
 
         sfeed = SensorFeed(
             fridge=fridge_id,
@@ -87,7 +95,12 @@ def process_data(request):
             ext_temp=temp_out,
             power_consumption=pot_val
         )
-        sfeed.save()
+        try:
+            sfeed.full_clean()
+            sfeed.save()
+        except ValidationError as e:
+            print("Validation Error", e)
+
 
         # alarm
         url = "https://api.telegram.org/bot7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
