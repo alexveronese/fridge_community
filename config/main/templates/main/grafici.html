@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grafico Temperatura</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<h1>Grafico delle Temperature</h1>
+<canvas id="myChart" width="400" height="200"></canvas>
+
+<script>
+    const sensorData = JSON.parse('{{ sensor_data|safe }}');
+    const ctx = document.getElementById('myChart');
+    const temperatures = sensorData.map(entry => entry.int_temp);
+    const timestamps = sensorData.map(entry => entry.timestamp);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: timestamps,
+            datasets: [{
+                label: 'Temperature',
+                data: temperatures,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    </script>
+</body>
+</html>
