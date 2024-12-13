@@ -10,6 +10,7 @@ class Fridge(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
+
 class SensorFeed(models.Model):
     fridge = ForeignKey(Fridge, on_delete=models.CASCADE)
 

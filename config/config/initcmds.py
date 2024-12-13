@@ -14,7 +14,7 @@ def init_db():
     if len(Fridge.objects.all()) != 0:
         return
 
-    print("Creating DB")
+
 
     # code for creating DB
 
