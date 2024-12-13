@@ -8,6 +8,7 @@ from django.db.models import QuerySet
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, DetailView, TemplateView, ListView
 from django.contrib.auth.decorators import login_required
 from braces.views import GroupRequiredMixin, LoginRequiredMixin
@@ -68,6 +69,7 @@ class MyFridgeListView(LoginRequiredMixin, ListView):
         return Fridge.objects.filter(user=user)
 
 
+@csrf_exempt
 def process_data(request):
     if request.method == 'POST':
         data = request.POST.dict()
@@ -107,10 +109,11 @@ def process_data(request):
 
         # alarm
         url = "https://api.telegram.org/bot7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
+        """
         if alarm[0]:
             # temperatureIN too high
             x = requests.post(url + "/notify", data=sfeed.int_temp) # cambiare nome "/notify" con metodo del bot
-
+        """
 
         print(f"Dati ricevuti: {data}") # debug
 
