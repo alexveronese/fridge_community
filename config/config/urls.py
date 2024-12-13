@@ -21,7 +21,7 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 from config.views import *
-from initcmds import *
+from .initcmds import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
