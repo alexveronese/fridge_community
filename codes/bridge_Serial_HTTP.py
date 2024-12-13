@@ -13,11 +13,11 @@ class Bridge():
         # self.postdata(0, 2)  prova post
         self.setupSerial()
 
-    def postdata(self, val):
-        if len(val) <= 6:
+    def postData(self, val):
+        if len(val) < 6:
             return print("values missing")
-        url = self.config.get("DJANGO", "Url") + "/data"
-        bot_url = self.config.get("TELEGRAM", "Url")
+        url = self.config.get("DJANGO", "Url") + "data/"
+        #bot_url = self.config.get("TELEGRAM", "Url")
         myobj = {'id':val[0],
                  'button_state': val[1],
                  'temp_in': val[2],
@@ -29,7 +29,7 @@ class Bridge():
         print("> Sending to " + url)
 
         x = requests.post(url, data=myobj, headers=headers)
-        print(x.json())
+        #print(x.json())
 
 
     def setupSerial(self):
@@ -116,11 +116,12 @@ class Bridge():
 
         print("\nPrinting: {")
         #read all sent values (also Arduino ID)
+        val = []
         for i in range(len(self.inbuffer)):
-            val = int.from_bytes(self.inbuffer[i], byteorder='little')
-            print(val, ",")
+            val.append(int.from_bytes(self.inbuffer[i], byteorder='little'))
+            print(val[i], ",")
         print("}")
-        #self.postData(val)
+        self.postData(val)
 
 
 if __name__ == '__main__':
