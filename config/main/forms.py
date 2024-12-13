@@ -7,7 +7,7 @@ class CreateFridgeForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_id = "fridge_crispy_form"
     helper.form_method = "POST"
-    serial_number = forms.CharField(label="Serial Number", widget=forms.Textarea, min_length=10, max_length=10)
+    serial_number = forms.IntegerField(label="Serial Number", widget=forms.TextInput(attrs={'placeholder': 'Serial Number'}), min_value=0,  max_value=253)
     secret_number = forms.CharField(label="Secret Number", widget=forms.Textarea, min_length=3, max_length=3)
     helper.add_input(Submit("Submit", "Confirm registration"))
 
