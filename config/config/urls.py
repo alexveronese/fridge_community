@@ -21,6 +21,7 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 from config.views import *
+from initcmds import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,3 +37,9 @@ urlpatterns = [
 # The following works only if DEBUG==True. We use UNPREFIXED_MEDIA_URL, to make it work from Apache
 # when running from a subfolder which provides SCRIPT_NAME to the WSGI application
 urlpatterns += static(settings.UNPREFIXED_MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
+#erase_db()
+#init_db()
+#init_grousp()
