@@ -5,7 +5,6 @@ from typing import Any
 import requests
 from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
@@ -117,33 +116,31 @@ def process_data(request):
 
         print(f"Dati ricevuti: {data}") # debug
 
-class Chart_Data(TemplateView):
-    template_name = 'main/grafici.html'
-    def get_context_data(self, **kwargs):
-        fridge = Fridge.objects.create(serial_number=1)
-        #se non avete dati di sensori mettete questi
-        """
-        for i in range(10):
-            sfeed = SensorFeed(
-                fridge=fridge,
-                int_temp=random.randint(1,4),
-                door=0,
-                int_hum=0,
-                ext_temp=0,
-                power_consumption=0
-            )
-            try:
-                sfeed.full_clean()
-                sfeed.save()
-            except ValidationError as e:
-                print("Validation Error", e)
-        """
-        context = super().get_context_data(**kwargs)
-        # Passa i dati di SensorFeed al template
-        data = list(SensorFeed.objects.values())
-        json_data = json.dumps(data, indent=4, sort_keys=True, default=str)
-        context['sensor_data'] = json_data
-        return context
+def get_grafico(request):
+    """
+    #se non avete dati di sensori mettete questi
+    fridge = Fridge.objects.create(serial_number=1)
+    for i in range(10):
+        sfeed = SensorFeed(
+            fridge=fridge,
+            int_temp=random.randint(1,4),
+            door=0,
+            int_hum=0,
+            ext_temp=0,
+            power_consumption=0
+        )
+        try:
+            sfeed.full_clean()
+            sfeed.save()
+        except ValidationError as e:
+            print("Validation Error", e)"""
+
+    # Passa i dati di SensorFeed al template
+    temp = []
+    set = SensorFeed.objects.values().order_by('timestamp')[:10]
+    for s in set:
+        temp.append(s.get('int_temp'))
+    return render(request, 'main/grafici.html', {'temp': temp})
 
 
 

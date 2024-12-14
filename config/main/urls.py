@@ -10,5 +10,5 @@ urlpatterns = [
     path("addfridge/<pk>/", addFridge, name="add_fridge"),
     path("myfridgelist/", MyFridgeListView.as_view(), name="my_fridge_list"),
     path("data/", process_data, name="process_data"),
-    path('grafico/', Chart_Data.as_view(), name='Chart_Data'),
+    path('grafico/', get_grafico, name='Chart_Data'),
 ]
