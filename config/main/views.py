@@ -92,7 +92,7 @@ def process_data(request):
             return Exception("Errore dati")
 
         sfeed = SensorFeed(
-            fridge=Fridge.objects.get(serial_number=fridge_id),
+            fridge=fridge,
             door=button_state,
             int_temp=temp_in,
             int_hum=hum_in,
@@ -117,30 +117,38 @@ def process_data(request):
         print(f"Dati ricevuti: {data}") # debug
 
 def get_grafico(request):
-    """
+
     #se non avete dati di sensori mettete questi
-    fridge = Fridge.objects.create(serial_number=1)
+    fridge = get_object_or_404(Fridge, pk=1)
+    if not fridge:
+        fridge = Fridge.objects.create(serial_number=1)
     for i in range(10):
         sfeed = SensorFeed(
             fridge=fridge,
             int_temp=random.randint(1,4),
             door=0,
-            int_hum=0,
+            int_hum=random.randint(0,80),
             ext_temp=0,
-            power_consumption=0
+            power_consumption=random.randint(0,5)
         )
         try:
             sfeed.full_clean()
             sfeed.save()
         except ValidationError as e:
-            print("Validation Error", e)"""
+            print("Validation Error", e)
 
     # Passa i dati di SensorFeed al template
     temp = []
-    set = SensorFeed.objects.values().order_by('timestamp')[:10]
+    pow_cons = []
+    hum = []
+    set = SensorFeed.objects.values().order_by('timestamp').reverse()[:10]
+
     for s in set:
         temp.append(s.get('int_temp'))
-    return render(request, 'main/grafici.html', {'temp': temp})
+        hum.append(s.get('int_hum'))
+        pow_cons.append(s.get('power_consumption'))
+
+    return render(request, 'main/grafici.html', {'temp': temp, 'hum': hum, 'pow': pow_cons})
 
 
 

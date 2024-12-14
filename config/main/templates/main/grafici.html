@@ -6,40 +6,74 @@
     <title>Grafico Temperatura</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-      h1{
-        width: 10px;
-        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-      }
-      script{
-        width: 20px;
-      }
+        body{
+            margin: 0px;
+            background-color: rgb(203, 218, 223);
+            margin: 0px;
+        }
+        .Grafici{
+            display: flex;
+            width: 100%;
+            justify-content: center;
+
+        }
+        h1 {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            text-align: center;
+            background-color: rgba(113, 203, 206, 0.377);
+            font-size: 50px;
+
+        }
+        #myChart {
+        max-width: 600px;
+        height: 400px; /* Aumentato */
+        }
+        #myChart1 {
+        max-width: 600px;
+        max-height: 400px; /* Aumentato */
+        }
+        #myChart2 {
+        max-width: 600px;
+        max-height: 400px; /* Aumentato */
+        }
         .box1{
-            width: 50px;
-            height: 50px;
+            text-align: center;
+            background-color: rgba(113, 203, 206, 0.377);
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            height: 30px;
+
         }
     </style>
 </head>
 <body>
-<h1>Grafico delle Temperature</h1>
-<canvas id="myChart" width="400" height="200"></canvas>
+<h1>GRAFICI</h1>
+
 <div class="box1">
+    <div><strong>Username: </strong> dwodwo <strong>Numero frigo:</strong> 319831</div>
+
+</div>
 
 
+<div class="Grafici">
+    <canvas id="myChart"></canvas>
     <script>
-    const ctx = document.getElementById('myChart');
+    const ctx = document.getElementById('myChart').getContext('2d');
 
     new Chart(ctx, {
-
         type: 'line',
         data: {
-            labels: [ 0, 1, 2, 3 ,4 ,5 ,6 ,7 ,8,9],
+            labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
             datasets: [{
                 label: 'Temperature',
                 data: {{temp|safe}},
-                borderWidth: 1
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2
             }]
         },
         options: {
+            maintainAspectRatio: false,
+            responsive: true,
             scales: {
                 y: {
                     beginAtZero: true
@@ -47,8 +81,66 @@
             }
         }
     });
+</script>
 
+
+    <canvas id="myChart1" ></canvas>
+    <script>
+    const ctx1 = document.getElementById('myChart1').getContext('2d');
+
+    new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            datasets: [{
+                label: 'umidita',
+                data: {{hum|safe}},
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+
+    <canvas id="myChart2" ></canvas>
+    <script>
+    const ctx2 = document.getElementById('myChart2').getContext('2d');
+
+    new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            datasets: [{
+                label: 'consumo di elettricità',
+                data: {{pow|safe}},
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 </script>
 </div>
+
 </body>
 </html>
