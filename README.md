@@ -1,7 +1,7 @@
 # To-do List
 - [] Testare e inviare segnali di allarme dal bridge e arduino
 - [] Creare webhook server-bot --> il server invia i dati al bot per notificare l'errore
-- [] guardare come inserire grafici/dashboard (AJAX o aggiornamento pagina)
+- [] dashboard (AJAX o aggiornamento pagina)
 - [] Aggiungere allarmi power consumption, umidità, temp esterna
 - [] Creare metodo sul bot telegram per gestire la post della temperatura troppo alta dal server(la post dal server già fatta, bisogna che il bot invii il messaggio in un metodo)
 - [] metodo bot telegram gestione domanda "sono utente buono o cattivo?"
