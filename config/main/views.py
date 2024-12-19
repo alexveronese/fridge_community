@@ -117,11 +117,13 @@ def process_data(request):
         print(f"Dati ricevuti: {data}") # debug
 
 def get_grafico(request):
-
-    #se non avete dati di sensori mettete questi
     fridge = get_object_or_404(Fridge, pk=1)
+    #se non avete dati di sensori mettete questi
+    # fridge = None
+    """
     if not fridge:
         fridge = Fridge.objects.create(serial_number=1)
+  
     for i in range(10):
         sfeed = SensorFeed(
             fridge=fridge,
@@ -136,19 +138,33 @@ def get_grafico(request):
             sfeed.save()
         except ValidationError as e:
             print("Validation Error", e)
-
+     """
     # Passa i dati di SensorFeed al template
     temp = []
     pow_cons = []
     hum = []
     set = SensorFeed.objects.values().order_by('timestamp').reverse()[:10]
-
+    # send_data_TELEGRAM([1],0)
     for s in set:
         temp.append(s.get('int_temp'))
         hum.append(s.get('int_hum'))
         pow_cons.append(s.get('power_consumption'))
 
     return render(request, 'main/grafici.html', {'temp': temp, 'hum': hum, 'pow': pow_cons})
+
+
+def send_data_TELEGRAM(alarm, sfeed):
+
+    url = "https://api.telegram.org/bot7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
+    if alarm[0]:
+        # temperatureIN too high
+        message = 'Ciao! Questo è un messaggio dal bot.'
+        data = {'chat_id': 1, 'text': message}
+        x = requests.post(url + "/sendMessage",data=data) # cambiare nome "/notify" con metodo del bot
+
+
+
+
 
 
 
