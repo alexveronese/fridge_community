@@ -61,7 +61,7 @@ void loop() {
 
     if(buttonState == 0){
         openFridgeTime = millis();
-    } else if(millis() - openFridgeTime > 10000){
+    } else if(millis() - openFridgeTime > 15000){
         // until closed
         while(digitalRead(buttonPin)){
             digitalWrite(BUZZER_PIN, HIGH);

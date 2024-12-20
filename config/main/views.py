@@ -116,15 +116,16 @@ def process_data(request):
 
         print(f"Dati ricevuti: {data}") # debug
 
-def get_grafico(request):
-    fridge = get_object_or_404(Fridge, pk=1)
-    #se non avete dati di sensori mettete questi
+
+@login_required
+def get_grafico(request, pk):
+    fridge = get_object_or_404(Fridge, pk=pk)
     # fridge = None
     """
     if not fridge:
         fridge = Fridge.objects.create(serial_number=1)
-  
     for i in range(10):
+    #se non avete dati di sensori mettete questi
         sfeed = SensorFeed(
             fridge=fridge,
             int_temp=random.randint(1,4),
@@ -138,7 +139,7 @@ def get_grafico(request):
             sfeed.save()
         except ValidationError as e:
             print("Validation Error", e)
-     """
+            """
     # Passa i dati di SensorFeed al template
     temp = []
     pow_cons = []
