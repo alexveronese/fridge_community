@@ -45,14 +45,14 @@ void loop() {
   //read internal temperature and humidity values
   byte dataInt[40] = {0};
   if (dht11.read2(pinDHT11int, &temperatureIn, &humidityIn, dataInt)) {
-    Serial.println("Read DHT11 failed");
+    Serial.println("Read internal DHT11 failed");
     return;
   }
 
   //read external temperature and humidity values
   byte dataExt[40] = {0};
   if (dht11.read2(pinDHT11ext, &temperatureOut, &humidityOut, dataExt)) {
-    Serial.print("Read DHT11 failed");
+    Serial.print("Read external DHT11 failed");
     return;
   }
 
