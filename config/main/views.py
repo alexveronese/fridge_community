@@ -196,7 +196,7 @@ def send_alarm(request, pk):
     alarm = SensorFeed.objects.filter(fridge=fridge).order_by('timestamp').reverse()[0]
     print(alarm.alarm_temp)
     if request.method == 'GET':
-        return JsonResponse(data={'value': 1})
+        return JsonResponse(data={'value': alarm.alarm_temp})
 
 
 
