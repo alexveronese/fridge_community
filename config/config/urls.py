@@ -42,4 +42,4 @@ urlpatterns += static(settings.UNPREFIXED_MEDIA_URL, document_root=settings.MEDI
 
 #erase_db()
 #init_db()
-#init_grousp()
+#init_groups()

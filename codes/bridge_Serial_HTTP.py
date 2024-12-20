@@ -4,7 +4,7 @@ import requests
 import time
 import configparser
 
-PK = ''
+PK = 1
 
 class Bridge():
 
@@ -18,7 +18,6 @@ class Bridge():
             return print("values missing")
         url = self.config.get("DJANGO", "Url") + "data/"
         #bot_url = self.config.get("TELEGRAM", "Url")
-        PK = val[0]
         myobj = {'id':val[0],
                  'button_state': val[1],
                  'temp_in': val[2],
@@ -33,13 +32,15 @@ class Bridge():
 
     def getData(self):
         pk = PK
-        url = self.config.get("DJANGO", "Url") + "data/alarm/" + pk
-        headers = {'X-AIO-Key': self.config.get("HTTPAIO", "X-AIO-Key")}
+        print(pk)
+        url = self.config.get("DJANGO", "Url") + "data/alarm/" + str(pk)
+        headers = {'X-AIO-Key': self.config.get("DJANGO", "X-AIO-Key")}
         print("> Sending GET to " + url)
 
         x = requests.get(url, headers=headers)
+        print(x)
         res = x.json()
-        val = res.get('value', None)
+        val = res.get('value')
         print(x.json())
         return val
 
@@ -104,7 +105,7 @@ class Bridge():
                                 print("Packet is too short, ignored")
                             else:
                                 self.useData()  # process data
-
+                                print("Alarm?")
                                 # Get data and send appropriate command
                                 dataAlarm = self.getData()
                                 if dataAlarm == '1':

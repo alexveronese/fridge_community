@@ -5,7 +5,7 @@ from typing import Any
 import requests
 from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
@@ -104,10 +104,9 @@ def process_data(request):
             int_hum=hum_in,
             ext_temp=temp_out,
             power_consumption=pot_val,
-            alarm=alarm
+            alarm_temp=alarm
         )
         try:
-            send_alarm(sfeed)
             sfeed.full_clean()
             sfeed.save()
         except ValidationError as e:
@@ -123,6 +122,7 @@ def process_data(request):
         """
 
         print(f"Dati ricevuti: {data}") # debug
+        return HttpResponse('Ok')
 
 
 @login_required
@@ -193,9 +193,10 @@ def predict(external_temp, internal_temp_variation, door_open_time):
 
 def send_alarm(request, pk):
     fridge = get_object_or_404(Fridge, pk=pk)
-    alarm = SensorFeed.objects.filter(fridge=Fridge).order_by('timestamp').reverse()[0]
+    alarm = SensorFeed.objects.filter(fridge=fridge).order_by('timestamp').reverse()[0]
+    print(alarm.alarm_temp)
     if request.method == 'GET':
-        return JsonResponse({'value': alarm})
+        return JsonResponse(data={'value': 1})
 
 
 
