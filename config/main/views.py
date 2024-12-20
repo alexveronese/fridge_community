@@ -34,7 +34,7 @@ class FridgeListView(ListView):
     template_name = "main/fridge_list.html"
 
     def get_queryset(self):
-        return Fridge.objects.all().order_by("id")
+        return Fridge.objects.all().order_by("serial_number")
 
 
 @login_required
@@ -78,7 +78,6 @@ def process_data(request):
         hum_in = data.get('hum_in')
         temp_out = data.get('temp_out')
         pot_val = data.get('pot_val')
-        alarm = data.get('alarm')
 
         fridge = get_object_or_404(Fridge, pk=fridge_id)
         if not fridge:
