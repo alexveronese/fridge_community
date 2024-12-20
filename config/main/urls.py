@@ -9,6 +9,7 @@ urlpatterns = [
     path("fridgelist/", FridgeListView.as_view(), name="fridge_list"),
     path("addfridge/<pk>/", addFridge, name="add_fridge"),
     path("myfridgelist/", MyFridgeListView.as_view(), name="my_fridge_list"),
-    path("data/", process_data, name="process_data"),
+    path("data/", process_data, name='process_data'),
     path('grafico/', get_grafico, name='Chart_Data'),
+    path('data/alarm/<pk>/',send_alarm, name='send_alarm')
 ]

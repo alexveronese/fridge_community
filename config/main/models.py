@@ -20,6 +20,7 @@ class SensorFeed(models.Model):
     ext_temp = models.IntegerField(default=0)
     ext_hum = models.IntegerField(default=0)
     power_consumption = models.IntegerField(default=0)
+    alarm_temp = models.BooleanField(default=False)
 
     timestamp = models.DateTimeField(auto_now_add=True)
 

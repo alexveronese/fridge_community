@@ -5,6 +5,7 @@ from typing import Any
 import requests
 from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
@@ -80,6 +81,10 @@ def process_data(request):
         hum_in = data.get('hum_in')
         temp_out = data.get('temp_out')
         pot_val = data.get('pot_val')
+        alarm = 0
+
+        if not button_state and temp_in > 5:
+            alarm = 1
 
         fridge = get_object_or_404(Fridge, pk=fridge_id)
         if not fridge:
@@ -98,9 +103,11 @@ def process_data(request):
             int_temp=temp_in,
             int_hum=hum_in,
             ext_temp=temp_out,
-            power_consumption=pot_val
+            power_consumption=pot_val,
+            alarm=alarm
         )
         try:
+            send_alarm(sfeed)
             sfeed.full_clean()
             sfeed.save()
         except ValidationError as e:
@@ -151,7 +158,6 @@ def get_grafico(request, pk):
         temp.append(s.get('int_temp'))
         hum.append(s.get('int_hum'))
         pow_cons.append(s.get('power_consumption'))
-
     return render(request, 'main/grafici.html', {'temp': temp, 'hum': hum, 'pow': pow_cons})
 
 
@@ -185,6 +191,11 @@ def predict(external_temp, internal_temp_variation, door_open_time):
         print("The user is behaving terribly")  # bad
 
 
+def send_alarm(request, pk):
+    fridge = get_object_or_404(Fridge, pk=pk)
+    alarm = SensorFeed.objects.filter(fridge=Fridge).order_by('timestamp').reverse()[0]
+    if request.method == 'GET':
+        return JsonResponse({'value': alarm})
 
 
 
