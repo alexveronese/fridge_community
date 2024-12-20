@@ -10,7 +10,6 @@ class Bridge():
     def __init__(self):
         self.config = configparser.ConfigParser()
         self.config.read('config.ini')
-        # self.postdata(0, 2)  prova post
         self.setupSerial()
 
     def postData(self, val):
@@ -23,13 +22,23 @@ class Bridge():
                  'temp_in': val[2],
                  'hum_in': val[3],
                  'temp_out': val[4],
-                 'pot_val' : val[5],
-                 'alarm': val[6:]}
+                 'pot_val' : val[5]}
         headers = {'X-AIO-Key': self.config.get("DJANGO", "X-AIO-Key")}
         print("> Sending to " + url)
 
         x = requests.post(url, data=myobj, headers=headers)
         #print(x.json())
+
+    def getData(self):
+        url = self.config.get("DJANGO", "Url") + "data/alarm/"
+        headers = {'X-AIO-Key': self.config.get("HTTPAIO", "X-AIO-Key")}
+        print("> Sending GET to " + url)
+
+        x = requests.get(url, headers=headers)
+        res = x.json()
+        val = res.get('value', None)
+        print(x.json())
+        return val
 
 
     def setupSerial(self):
@@ -92,6 +101,13 @@ class Bridge():
                                 print("Packet is too short, ignored")
                             else:
                                 self.useData()  # process data
+
+                                # Get data and send appropriate command
+                                dataAlarm = self.getData()
+                                if dataAlarm == '1':
+                                    self.ser.write(b'A')
+                                elif dataAlarm == '0':
+                                    self.ser.write(b'S')
 
                             # clear the buffer
                             self.inbuffer = []
