@@ -12,6 +12,7 @@ const int ledPin = 10;
 int buttonState = 0;              // open/close
 float temperatureIn = 0.0;        // internal temperature and humidity
 float humidityIn = 0.0;
+float humidityOut = 0.0;
 int conv_temperatureIn = 0;       // values casted to int
 int conv_humidityIn = 0;
 float temperatureOut = 0.0;       // external temperature and humidity
@@ -85,7 +86,6 @@ void loop() {
     conv_temperatureIn = (int)(round(temperatureIn));
     conv_humidityIn = (int)(round(humidityIn));
     conv_temperatureOut = (int)(round(temperatureOut));
-    conv_humidityOut = (int)(round(humidityOut));
 
     //just for debugging
     //Serial.println("converted values:");
@@ -102,7 +102,6 @@ void loop() {
     Serial.write(conv_humidityIn);
     Serial.write(conv_temperatureOut);
     Serial.write(potentiometerValue);
-    Serial.write(temp_alarm);
     Serial.write(0xFE);               //254: end char
 
     timestamp = millis();
