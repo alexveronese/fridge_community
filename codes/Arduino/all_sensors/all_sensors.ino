@@ -1,7 +1,7 @@
 #include <SimpleDHT.h>
 
 SimpleDHT11 dht11;              //instantiates the SimpleDHT11 Object class to variable dht11
-const int buttonPin = 2;        //0 = fridge closed; 1 = fridge open
+const int buttonPin = 2;        //0 = fridge closed; 1 = fridge opened
 const int pinDHT11int = 5;      //front_view: signal, vcc, gnd
 const int pinDHT11ext = 6;
 const int BUZZER_PIN = 3;
