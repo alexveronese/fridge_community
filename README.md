@@ -5,7 +5,6 @@
 - [] Aggiungere allarmi power consumption, umidità, temp esterna
 - [] Creare metodo sul bot telegram per gestire la post della temperatura troppo alta dal server(la post dal server già fatta, bisogna che il bot invii il messaggio in un metodo)
 - [] metodo bot telegram gestione domanda "sono utente buono o cattivo?" chiamare funzione predict in /config/main/views.py
-- [] calcolare e inviare anche tempo di apertura porta su arduino
 - [x] in grafici.html non prende i dati JSON.parse, non so perchè che palle io li passo in formato json aaaa
 - [x] fix serial number lenght (0-255)
 - [x] Definire l'ordine in cui passiamo i dati
