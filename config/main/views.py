@@ -18,7 +18,6 @@ import pandas as pd
 import joblib
 
 
-
 class HomeView(TemplateView):
     template_name = 'main/home.html'
 
@@ -220,6 +219,53 @@ def process_bot_predict(request, pk):
         pred = predict(last.ext_temp, var, time_opened)
 
         return JsonResponse(data={'value': pred})
+
+
+
+# Telegram Bot Configuration
+BOT_TOKEN = "7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
+BOT_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+
+
+@csrf_exempt
+def store_chat_id(request):
+    """
+    API endpoint to store the user's Telegram chat_id.
+    """
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            chat_id = data.get('chat_id')
+            username = data.get('username')
+            fridge_id =  data.get('fridge_id')
+
+            if not chat_id:
+                return JsonResponse({'error': 'chat_id is required'}, status=400)
+
+            # Save or update the chat_id in the database
+            user, created = TelegramUser.objects.update_or_create(
+                chat_id=chat_id,
+                defaults={'username': username, 'fridge_id': fridge_id},
+            )
+            return JsonResponse({'status': 'success', 'created': created})
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+
+def notify_telegram_bot(message: str, chat_id: int):
+    """
+    Send a notification to the user via Telegram bot.
+    """
+    payload = {
+        'chat_id': chat_id,
+        'text': message
+    }
+    response = requests.post(BOT_API_URL, json=payload)
+    return response.status_code
+
+
 
 
 
