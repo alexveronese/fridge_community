@@ -11,5 +11,6 @@ urlpatterns = [
     path("myfridgelist/", MyFridgeListView.as_view(), name="my_fridge_list"),
     path("data/", process_data, name='process_data'),
     path('grafico/', get_grafico, name='Chart_Data'),
-    path('data/alarm/<pk>/',send_alarm, name='send_alarm')
+    path('data/alarm/<pk>/',send_alarm, name='send_alarm'),
+    path('data/predict/<pk>/',process_bot_predict, name='process_bot_predict')
 ]

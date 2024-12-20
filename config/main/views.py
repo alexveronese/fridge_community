@@ -189,6 +189,7 @@ def predict(external_temp, internal_temp_variation, door_open_time):
         print("The user is behaving inappropriately")  # medium
     else:
         print("The user is behaving terribly")  # bad
+    return prediction[0]
 
 
 def send_alarm(request, pk):
@@ -199,6 +200,26 @@ def send_alarm(request, pk):
         return JsonResponse(data={'value': alarm.alarm_temp})
 
 
+def process_bot_predict(request, pk):
+    fridge = get_object_or_404(Fridge, pk=pk)
+    if request.method == 'GET':
+        sfeed = SensorFeed.objects.filter(fridge=fridge).order_by('timestamp').reverse()[0:]
+        last = sfeed[0]
+        first = None
+        for feed in sfeed:
+            if not feed.button_state:
+                first = feed
+                break
+        if first is None:
+            first = sfeed[len(sfeed) - 1]
+
+        time_opened = last.timestamp - first.timestamp
+
+        var = abs(last.int_temp - first.int_temp)
+
+        pred = predict(last.ext_temp, var, time_opened)
+
+        return JsonResponse(data={'value': pred})
 
 
 
