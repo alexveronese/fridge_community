@@ -67,12 +67,12 @@ void loop() {
       openFridgeTime = millis();
   }
 
-  if (Serial.available())
-    { int dataAlarm;
+  if (Serial.available()) {
+      int dataAlarm;
       dataAlarm = Serial.read();
       if (dataAlarm == 'A') digitalWrite(10, HIGH);
       if (dataAlarm =='S') digitalWrite(10, LOW);
-    }
+  }
 
   //se passa abbastanza tempo invio i dati
   if(millis() - timestamp > 5000){      //delay
