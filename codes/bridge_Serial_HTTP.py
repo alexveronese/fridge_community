@@ -4,6 +4,7 @@ import requests
 import time
 import configparser
 
+PK = ''
 
 class Bridge():
 
@@ -17,6 +18,7 @@ class Bridge():
             return print("values missing")
         url = self.config.get("DJANGO", "Url") + "data/"
         #bot_url = self.config.get("TELEGRAM", "Url")
+        PK = val[0]
         myobj = {'id':val[0],
                  'button_state': val[1],
                  'temp_in': val[2],
@@ -30,7 +32,8 @@ class Bridge():
         #print(x.json())
 
     def getData(self):
-        url = self.config.get("DJANGO", "Url") + "data/alarm/"
+        pk = PK
+        url = self.config.get("DJANGO", "Url") + "data/alarm/" + pk
         headers = {'X-AIO-Key': self.config.get("HTTPAIO", "X-AIO-Key")}
         print("> Sending GET to " + url)
 
