@@ -13,6 +13,8 @@ from django.contrib.auth.decorators import login_required
 from braces.views import GroupRequiredMixin, LoginRequiredMixin
 from .forms import CreateFridgeForm, AddFridgeForm
 from .models import *
+import pandas as pd
+import joblib
 
 
 
@@ -161,6 +163,27 @@ def send_data_TELEGRAM(alarm, sfeed):
         message = 'Ciao! Questo è un messaggio dal bot.'
         data = {'chat_id': 1, 'text': message}
         x = requests.post(url + "/sendMessage",data=data) # cambiare nome "/notify" con metodo del bot
+
+
+def predict(external_temp, internal_temp_variation, door_open_time):
+    new_data = pd.DataFrame({
+        'external_temp': external_temp,
+        'internal_temp_variation': internal_temp_variation,
+        'door_open_time': door_open_time
+    })
+
+    clf_loaded=joblib.load('random_forest_model.pkl')
+
+    # Prediction on new data
+    prediction = clf_loaded.predict(new_data)
+
+    if prediction[0] == 0:
+        print("The user is behaving well")  # good
+    elif prediction[0] == 2:
+        print("The user is behaving inappropriately")  # medium
+    else:
+        print("The user is behaving terribly")  # bad
+
 
 
 
