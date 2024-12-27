@@ -72,6 +72,13 @@ class MyFridgeListView(LoginRequiredMixin, ListView):
 
 @csrf_exempt
 def process_data(request):
+    """Reiceves data from Bridge
+
+    Pattern received = { id, button_state, temp_in, hum_in, temp_out, pot_val}
+    add instance SensorFeed to database
+
+
+   """
     if request.method == 'POST':
         data = request.POST.dict()
         fridge_id = data.get('id')
@@ -126,9 +133,16 @@ def process_data(request):
 
 @login_required
 def get_grafico(request, pk):
+    """Render Grafici.html
+
+    Pass {temp, hum_in, pow_consumption} to html for creating graph
+    If you want to test it and you're missing database data --> uncomment *
+
+    """
     fridge = get_object_or_404(Fridge, pk=pk)
     # fridge = None
     """
+    #Uncomment *
     if not fridge:
         fridge = Fridge.objects.create(serial_number=1)
     for i in range(10):
@@ -162,6 +176,7 @@ def get_grafico(request, pk):
 
 def send_data_TELEGRAM(alarm, sfeed):
 
+
     url = "https://api.telegram.org/bot7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
     if alarm[0]:
         # temperatureIN too high
@@ -171,6 +186,13 @@ def send_data_TELEGRAM(alarm, sfeed):
 
 
 def predict(external_temp, internal_temp_variation, door_open_time):
+    """Predict using random_forest algorithm
+
+    Return { 0 --> Behaving well,
+             2 --> Behaving inappropriately,
+             other --> Bad }
+
+    """
     new_data = pd.DataFrame({
         'external_temp': external_temp,
         'internal_temp_variation': internal_temp_variation,
@@ -192,6 +214,11 @@ def predict(external_temp, internal_temp_variation, door_open_time):
 
 
 def send_alarm(request, pk):
+    """Process GET from Bridge
+
+    Bridge need to know if alarms have gone off
+
+    """
     fridge = get_object_or_404(Fridge, pk=pk)
     alarm = SensorFeed.objects.filter(fridge=fridge).order_by('timestamp').reverse()[0]
     print(alarm.alarm_temp)
@@ -200,6 +227,11 @@ def send_alarm(request, pk):
 
 
 def process_bot_predict(request, pk):
+    """Process behaving evaluation from telegram
+
+    gets the last sensorfeeds sampled with an open_door value and predict behave
+
+    """
     fridge = get_object_or_404(Fridge, pk=pk)
     if request.method == 'GET':
         sfeed = SensorFeed.objects.filter(fridge=fridge).order_by('timestamp').reverse()[0:]
