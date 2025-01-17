@@ -12,5 +12,8 @@ urlpatterns = [
     path("data/", process_data, name='process_data'),
     path('grafico/', get_grafico, name='Chart_Data'),
     path('data/alarm/<pk>/',send_alarm, name='send_alarm'),
-    path('data/predict/<pk>/',process_bot_predict, name='process_bot_predict')
+    path('data/predict/<pk>/',process_bot_predict, name='process_bot_predict'),
+    path('notify-bot/', notify_telegram_bot, name='notify_bot'),
+    path('api/store_chat_id/', store_chat_id, name='store_chat_id'),
+    path('api/get_least_recent_data/', get_least_recent_data, name='get_least_recent_data'),
 ]
