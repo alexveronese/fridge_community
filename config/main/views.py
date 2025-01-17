@@ -302,3 +302,88 @@ def notify_telegram_bot(message: str, chat_id: int):
 
 
 
+# Telegram Bot Configuration
+BOT_TOKEN = "7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
+BOT_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+
+
+@csrf_exempt
+def store_chat_id(request):
+    """
+    API endpoint to store the user's Telegram chat_id.
+    """
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            chat_id = data.get('chat_id')
+            username = data.get('username')
+            fridge_id =  data.get('fridge_id')
+
+            if not chat_id:
+                return JsonResponse({'error': 'chat_id is required'}, status=400)
+
+            # Save or update the chat_id in the database
+            user, created = TelegramUser.objects.update_or_create(
+                chat_id=chat_id,
+                defaults={'username': username, 'fridge_id': fridge_id},
+            )
+            return JsonResponse({'status': 'success', 'created': created})
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def get_least_recent_data(request):
+    """
+    API endpoint to get the least recent data from the SensorFeed model.
+    """
+    if request.method == 'GET':
+        try:
+            data = json.loads(request.body)
+            fridge_number = data.get('fridge_number')
+            chat_id = data.get('chat_id')
+
+            if not fridge_number:
+                return JsonResponse({'error': 'fridge_number is required'}, status=400)
+
+            if not chat_id:
+                return JsonResponse({'error': 'chat_id is required'}, status=400)
+
+            if not TelegramUser.objects.filter(fridge_id=fridge_number, chat_id=chat_id).exists():
+                return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+            fridge = Fridge.objects.get(serial_number=fridge_number)
+
+            sensor_feed = SensorFeed.objects.values().filter(fridge=fridge).order_by('timestamp').last()
+            if sensor_feed:
+                response_data = {
+                    'fridge': fridge.serial_number,
+                    'door': sensor_feed.get('door'),
+                    'int_temp': sensor_feed.get('int_temp'),
+                    'int_hum': sensor_feed.get('int_hum'),
+                    'ext_temp': sensor_feed.get('ext_temp'),
+                    'ext_hum': sensor_feed.get('ext_hum'),
+                    'power_consumption': sensor_feed.get('power_consumption'),
+                }
+                return JsonResponse(response_data)
+            else:
+                return JsonResponse({'error': 'No data found'}, status=404)
+        except Fridge.DoesNotExist:
+            return JsonResponse({'error': 'Fridge not found'}, status=404)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=404)
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def notify_telegram_bot(message: str, chat_id: int):
+    """
+    Send a notification to the user via Telegram bot.
+    """
+    payload = {
+        'chat_id': chat_id,
+        'text': message
+    }
+    response = requests.post(BOT_API_URL, json=payload)
+    return response.status_code
+
+
+
