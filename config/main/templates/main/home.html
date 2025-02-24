@@ -5,10 +5,29 @@
 {% block title %} Fridge Community Homepage {% endblock %}
 
 {% block content %}
-    <div class="flex-container">
-        <br>
-        <h2>Home Page</h2>
+    <div class="container text-center my-5">
+        <!-- Titolo -->
+        <h1 class="display-3 text-dark font-weight-bold mb-3">Fridge Community</h1>
+        <p class="lead text-muted mb-4" style="font-size: 1.5rem;">Welcome to the ultimate platform for tracking and managing fridges in your community!</p>
+
+        <!-- Immagine -->
+        <img src="https://via.placeholder.com/800x400" alt="Fridge Community" class="img-fluid rounded shadow-lg mb-5" />
+
+        <!-- Introduzione al Progetto -->
+        <p class="text-dark mb-4" style="font-size: 1.5rem;">
+            Join our community and start registering your fridges to keep track of their status and share information with others.
+        </p>
+
+        <!-- Button Row -->
+        <div class="row justify-content-center">
+            <!-- Register Button -->
+            <div class="col-md-3 col-sm-4 mb-3">
+                <a href="{% url 'register' %}" class="btn btn-lg btn-outline-success rounded-pill shadow-lg w-100">Register</a>
+            </div>
+            <!-- Login Button -->
+            <div class="col-md-3 col-sm-4 mb-3">
+                <a href="{% url 'login' %}" class="btn btn-lg btn-outline-primary rounded-pill shadow-lg w-100">Login</a>
+            </div>
+        </div>
     </div>
-    
-    
-{% endblock content %}
+{% endblock %}
