@@ -96,4 +96,4 @@ def send_telegram_notification(sender, instance, created, **kwargs):
                 notify_telegram_bot(message, telegram_user.chat_id)
 
         except TelegramUser.DoesNotExist:
-            pass  # Cosa si fa se non c'è un utente Telegram associato a quel frigo?
+            pass
