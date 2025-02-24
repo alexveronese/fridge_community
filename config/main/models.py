@@ -1,3 +1,4 @@
+from django.contrib.sites import requests
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import ForeignKey
@@ -48,16 +49,6 @@ class TelegramUser(models.Model):
 BOT_TOKEN = "7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"  # Replace with your actual bot token
 BOT_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
-def notify_telegram_bot(message: str, chat_id: int):
-    """
-    Send a notification to the user via Telegram bot.
-    """
-    payload = {
-        'chat_id': chat_id,
-        'text': message
-    }
-    response = requests.post(BOT_API_URL, json=payload)
-    return response.status_code
 
 ACCEPTABLE_RANGES = {
     'int_temp': (0, 10),  
