@@ -8,13 +8,13 @@
     <div class="container text-center my-5">
         <h1 class="display-3 text-dark font-weight-bold mb-3">Fridge Community</h1>
         <p class="lead text-muted mb-4" style="font-size: 1.5rem;">Welcome to the ultimate platform for tracking and managing fridges in your community!</p>
-        
+
         <img src="https://via.placeholder.com/800x400" alt="Fridge Community" class="img-fluid rounded shadow-lg mb-5" />
-        
+
         <p class="text-dark mb-4" style="font-size: 1.5rem;">
             Join our community and start registering your fridges to keep track of their status and share information with others.
         </p>
-        
+
         <div class="row justify-content-center">
             {% if user.is_authenticated %}
                 {% if user.is_staff %}
