@@ -18,12 +18,16 @@
 </div>
 {% endif %}
 
-<form method="post"> {% csrf_token %}
+<form method="post">
+  {% csrf_token %}
+  {{ form|crispy }}
 
-  {{form | crispy}}
-  
-  <input type="submit" class="btn btn-success" value="Esegui login">
-  
-  </form>
+  <div class="col-md-3 col-sm-4 mb-3 mx-auto">
+      <button type="submit" class="btn btn-lg btn-outline-success rounded-pill shadow-lg w-100">
+          Sign In
+      </button>
+  </div>
+
+</form>
 
 {% endblock %}

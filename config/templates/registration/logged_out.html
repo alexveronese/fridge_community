@@ -6,13 +6,18 @@
 {% block title %} Logout {% endblock %} 
 
 {% block header1 %}
-  <h1>Pagina di Logout</h1>
+  <h1 class="text-center text-danger font-weight-bold mt-4">Pagina di Logout</h1>
 {% endblock %}
 
-{% block content %} 
+{% block content %}
+<div class="container d-flex flex-column align-items-center justify-content-center text-center" style="height: 60vh;">
+    <h2 class="text-dark font-weight-bold mb-4" style="font-size: 2rem;">You have been successfully logged out</h2>
+    <h5 class="text-muted mb-5" style="font-size: 1.5rem;">See you soon!</h5>
 
-<h2>Logout eseguito con successo</h2>
-<h5>Ci vediamo presto!</h5>
+    <p class="text-danger font-weight-bold mb-4" style="font-size: 1.25rem;">Hai sbagliato? Fai di nuovo il login.</p>
 
+    <div class="col-md-3 col-sm-4">
+        <a href="{% url 'login' %}" class="btn btn-lg btn-outline-primary rounded-pill shadow-lg w-100">Login Again</a>
+    </div>
+</div>
 {% endblock %}
-
