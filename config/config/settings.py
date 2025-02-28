@@ -128,7 +128,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-LOGIN_REDIRECT_URL = "main:home"
+LOGIN_REDIRECT_URL = "main:my_fridge_list"
 LOGIN_URL = "login"
 
 UNPREFIXED_MEDIA_URL = 'media/'  # This is the solution to get a relative path to the subfolder in which Django is run.
