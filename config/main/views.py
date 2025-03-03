@@ -132,20 +132,20 @@ def process_data(request):
 
 
 @login_required
-def get_grafico(request, pk):
+def get_grafico(request):
     """Render Grafici.html
 
     Pass {temp, hum_in, pow_consumption} to html for creating graph
     If you want to test it and you're missing database data --> uncomment *
 
     """
-    fridge = get_object_or_404(Fridge, pk=pk)
+    fridge = get_object_or_404(Fridge, pk=1)
     # fridge = None
-    """
+
     #Uncomment *
     if not fridge:
         fridge = Fridge.objects.create(serial_number=1)
-    for i in range(10):
+    for i in range(1):
     #se non avete dati di sensori mettete questi
         sfeed = SensorFeed(
             fridge=fridge,
@@ -157,21 +157,33 @@ def get_grafico(request, pk):
         )
         try:
             sfeed.full_clean()
+            print('dato')
             sfeed.save()
         except ValidationError as e:
             print("Validation Error", e)
-            """
+
+
     # Passa i dati di SensorFeed al template
     temp = []
     pow_cons = []
     hum = []
-    set = SensorFeed.objects.values().order_by('timestamp').reverse()[:10]
+    time = []
+    set = SensorFeed.objects.values().order_by('-timestamp')[:10]
+
     # send_data_TELEGRAM([1],0)
     for s in set:
         temp.append(s.get('int_temp'))
         hum.append(s.get('int_hum'))
         pow_cons.append(s.get('power_consumption'))
-    return render(request, 'main/grafici.html', {'temp': temp, 'hum': hum, 'pow': pow_cons})
+        time.append((s.get('timestamp')).strftime('%H:%M:%S'))
+
+
+    temp = temp[::-1]
+    hum = hum[::-1]
+    pow_cons = pow_cons[::-1]
+    time = time[::-1]
+    return render(request, 'main/grafici.html', {'temp': temp, 'hum': hum, 'pow': pow_cons, 'time': time})
+
 
 
 def send_data_TELEGRAM(alarm, sfeed):

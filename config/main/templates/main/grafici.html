@@ -3,144 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grafico Temperatura</title>
+    <title>Sensor Monitoring</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>// Ricarica la pagina ogni 5 secondi
+        setTimeout(function () {
+            location.reload(true);
+        }, 5000); // 5000 millisecondi = 5 secondi</script>
     <style>
-        body{
-            margin: 0px;
-            background-color: rgb(203, 218, 223);
-            margin: 0px;
+        /* Sfondo uniforme */
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa, #e3f2fd);
+            font-family: 'Arial', sans-serif;
+            color: #333;
         }
-        .Grafici{
-            display: flex;
-            width: 100%;
-            justify-content: center;
 
+        .main-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
         }
+
         h1 {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
             text-align: center;
-            background-color: rgba(113, 203, 206, 0.377);
-            font-size: 50px;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
 
-        }
-        #myChart {
-        max-width: 600px;
-        height: 400px; /* Aumentato */
-        }
-        #myChart1 {
-        max-width: 600px;
-        max-height: 400px; /* Aumentato */
-        }
-        #myChart2 {
-        max-width: 600px;
-        max-height: 400px; /* Aumentato */
-        }
-        .box1{
+        .chart-title {
             text-align: center;
-            background-color: rgba(113, 203, 206, 0.377);
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-            height: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 20px;
+        }
 
+        .chart-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px; /* Spazio tra i container */
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto; /* Centrare i grafici */
+            max-width: 800px; /* Larghezza massima */
+            height: 400px; /* Altezza fissa */
         }
     </style>
 </head>
 <body>
-<h1>GRAFICI</h1>
 
-<div class="box1">
-    <div><strong>Username: </strong> dwodwo <strong>Numero frigo:</strong> 319831</div>
+<div class="main-container">
+    <!-- Titoli principali -->
+    <h1>Sensor Monitoring Dashboard</h1>
+    <h2 class="chart-title">Internal Temperature (°C)</h2>
+    <div class="chart-container">
+        <canvas id="temperatureChart"></canvas>
+    </div>
 
+    <h2 class="chart-title">Internal Humidity (%)</h2>
+    <div class="chart-container">
+        <canvas id="humidityChart"></canvas>
+    </div>
+
+    <h2 class="chart-title">Power Consumption (kWh)</h2>
+    <div class="chart-container">
+        <canvas id="powerChart"></canvas>
+    </div>
 </div>
 
+<script>
+    // Funzione per creare gradienti di colore
+    function createGradient(ctx, colorStart, colorEnd) {
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, colorStart);
+        gradient.addColorStop(1, colorEnd);
+        return gradient;
+    }
 
-<div class="Grafici">
-    <canvas id="myChart"></canvas>
-    <script>
-    const ctx = document.getElementById('myChart').getContext('2d');
+    // Dati predefiniti (passati da Django)
+    const temperatureData = {{ temp|safe }};
+    const humidityData = {{ hum|safe }};
+    const powerData = {{ pow|safe }};
+    const labels = {{ time|safe }};
 
-    new Chart(ctx, {
+    // Grafico della Temperatura
+    const tempCtx = document.getElementById('temperatureChart').getContext('2d');
+    new Chart(tempCtx, {
         type: 'line',
         data: {
-            labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            labels,
             datasets: [{
                 label: 'Temperature',
-                data: {{temp|safe}},
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 2
+                data: temperatureData,
+                borderColor: '#ff6b6b',
+                backgroundColor: createGradient(tempCtx, 'rgba(255,107,107,0.5)', 'rgba(255,107,107,0.1)'),
+                borderWidth: 2,
+                pointBackgroundColor: '#ff6b6b',
+                pointRadius: 4,
+                fill: true,
+                tension: 0.4
             }]
         },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+        options:{
+          responsive:true,
+          plugins:{
+              legend:{display:false},
+              tooltip:{backgroundColor:'#fff',titleColor:'#333',bodyColor:'#666'}
+          },
+          scales:{
+              y:{beginAtZero:true ,grid:{color:'#eaeaea'}},
+              x:{grid:{display:false},
+                  ticks: {
+                    autoSkip: true,
+                    maxRotation: 45, // Imposta la rotazione massima
+                    minRotation: 45  // Imposta la rotazione minima
                 }
-            }
-        }
-    });
-</script>
+              }
+          }
+      }
+   });
 
-
-    <canvas id="myChart1" ></canvas>
-    <script>
-    const ctx1 = document.getElementById('myChart1').getContext('2d');
-
-    new Chart(ctx1, {
-        type: 'line',
-        data: {
-            labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-            datasets: [{
-                label: 'umidita',
-                data: {{hum|safe}},
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+   // Grafico dell'Umidità
+   const humCtx=document.getElementById(`humidityChart`).getContext(`2d`);
+   new Chart(humCtx,{
+       type:`line`,
+       data:{
+           labels,
+           datasets:[{
+               label:`Humidity`,
+               data :humidityData,
+               borderColor:`#4dabf7`,
+               backgroundColor:createGradient(humCtx ,`rgba(77 ,171 ,247 ,0.5)` ,`rgba(77 ,171 ,247 ,0.1)`),
+               borderWidth :2,
+               pointBackgroundColor:`#4dabf7`,
+               pointRadius :4,
+               fill:true,
+               tension :0.4
+           }]
+       },
+       options:{
+           responsive:true,
+           plugins:{
+               legend:{display:false},
+               tooltip:{backgroundColor:`#fff`,titleColor:`#333`,bodyColor:`#666`}
+           },
+           scales:{
+               y:{beginAtZero:true ,grid:{color:`#eaeaea`}},
+               x:{grid:{display:false},
+                   ticks: {
+                    autoSkip: true,
+                    maxRotation: 45, // Imposta la rotazione massima
+                    minRotation: 45  // Imposta la rotazione minima
                 }
-            }
-        }
-    });
-</script>
+               }
+           }
+       }
+   });
 
-
-    <canvas id="myChart2" ></canvas>
-    <script>
-    const ctx2 = document.getElementById('myChart2').getContext('2d');
-
-    new Chart(ctx2, {
-        type: 'line',
-        data: {
-            labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-            datasets: [{
-                label: 'consumo di elettricità',
-                data: {{pow|safe}},
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+   // Grafico del Consumo di Elettricità
+   const powCtx=document.getElementById(`powerChart`).getContext(`2d`);
+   new Chart(powCtx,{
+       type:`line`,
+       data:{
+           labels,
+           datasets:[{
+               label:`Power Consumption`,
+               data :powerData,
+               borderColor:`#ffa726`,
+               backgroundColor:createGradient(powCtx ,`rgba(255 ,167 ,38 ,0.5)` ,`rgba(255 ,167 ,38 ,0.1)`),
+               borderWidth :2,
+               pointBackgroundColor:`#ffa726`,
+               pointRadius :4,
+               fill:true,
+               tension :0.4
+           }]
+       },
+       options:{
+           responsive:true,
+           plugins:{
+               legend:{display:false},
+               tooltip:{backgroundColor:`#fff`,titleColor:`#333`,bodyColor:`#666`}
+           },
+           scales:{
+               y:{beginAtZero:true ,grid:{color:`#eaeaea`}},
+               x:{grid:{display:false},
+                   ticks: {
+                    autoSkip: true,
+                    maxRotation: 45, // Imposta la rotazione massima
+                    minRotation: 45  // Imposta la rotazione minima
                 }
-            }
-        }
-    });
+               }
+           }
+       }
+   });
 </script>
-</div>
 
 </body>
 </html>
