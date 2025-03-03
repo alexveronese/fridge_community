@@ -28,12 +28,6 @@
                         <a href="{% url 'main:register_fridge' %}" class="btn btn-lg btn-secondary rounded-pill shadow-lg w-100">Register new Fridge</a>
                     </div>
                 {% endif %}
-                <div class="col-md-3 col-sm-4 mb-3">
-                    <form id="logout-form" method="post" action="{% url 'logout' %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-lg btn-danger rounded-pill shadow-lg w-100">Logout</button>
-                    </form>
-                </div>
             {% else %}
                 <div class="col-md-3 col-sm-4 mb-3">
                     <a href="{% url 'register' %}" class="btn btn-lg btn-outline-success rounded-pill shadow-lg w-100">Register</a>
