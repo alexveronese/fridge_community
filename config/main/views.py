@@ -132,19 +132,18 @@ def process_data(request):
 
 
 @login_required
-def get_grafico(request):
+def get_grafico(request, pk):
     """Render Grafici.html
 
     Pass {temp, hum_in, pow_consumption} to html for creating graph
-    If you want to test it and you're missing database data --> uncomment *
 
     """
-    fridge = get_object_or_404(Fridge, pk=1)
+    fridge = get_object_or_404(Fridge, pk=pk)
     # fridge = None
 
-    #Uncomment *
     if not fridge:
         fridge = Fridge.objects.create(serial_number=1)
+
     for i in range(1):
     #se non avete dati di sensori mettete questi
         sfeed = SensorFeed(
@@ -157,7 +156,6 @@ def get_grafico(request):
         )
         try:
             sfeed.full_clean()
-            print('dato')
             sfeed.save()
         except ValidationError as e:
             print("Validation Error", e)
@@ -182,7 +180,7 @@ def get_grafico(request):
     hum = hum[::-1]
     pow_cons = pow_cons[::-1]
     time = time[::-1]
-    return render(request, 'main/grafici.html', {'temp': temp, 'hum': hum, 'pow': pow_cons, 'time': time})
+    return render(request, 'main/chart_data.html', {'temp': temp, 'hum': hum, 'pow': pow_cons, 'time': time})
 
 
 

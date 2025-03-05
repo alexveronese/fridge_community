@@ -57,7 +57,7 @@
                 {% for l in object_list %}
                     <tr>
                         <td>{{ l.serial_number }}</td>
-                        <td><a href="{% url 'main:add_fridge' l.pk %}" class="btn btn-info" role="button">Select</a></td>
+                        <td><a href="{% url 'main:chart_data' l.pk %}" class="btn btn-info" role="button">Select</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
