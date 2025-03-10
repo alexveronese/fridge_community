@@ -40,7 +40,7 @@ class FridgeListView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        return Fridge.objects.filter(user=user).order_by("serial_number")
+        return Fridge.objects.order_by("serial_number")
 
 
 @login_required
