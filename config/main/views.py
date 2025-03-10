@@ -12,6 +12,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, DetailView, TemplateView, ListView
 from django.contrib.auth.decorators import login_required
 from braces.views import GroupRequiredMixin, LoginRequiredMixin
+from urllib3 import request
+
 from .forms import CreateFridgeForm, AddFridgeForm
 from .models import *
 import pandas as pd
@@ -36,7 +38,8 @@ class FridgeListView(ListView):
     template_name = "main/fridge_list.html"
 
     def get_queryset(self):
-        return Fridge.objects.all().order_by("serial_number")
+        user = self.request.user
+        return Fridge.objects.filter(user=user).order_by("serial_number")
 
 
 @login_required
@@ -138,11 +141,12 @@ def get_grafico(request, pk):
     Pass {temp, hum_in, pow_consumption} to html for creating graph
 
     """
-    fridge = get_object_or_404(Fridge, pk=pk)
+
+    fridge = get_object_or_404(Fridge, pk=pk, user=request.user.id)
     # fridge = None
 
     if not fridge:
-        fridge = Fridge.objects.create(serial_number=1)
+        fridge = Fridge.objects.create(serial_number=1, user=request.user.id)
 
     for i in range(1):
     #se non avete dati di sensori mettete questi
@@ -394,6 +398,7 @@ def notify_telegram_bot(message: str, chat_id: int):
     }
     response = requests.post(BOT_API_URL, json=payload)
     return response.status_code
+
 
 
 
