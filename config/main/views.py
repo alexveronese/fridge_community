@@ -56,7 +56,7 @@ def addFridge(request, pk):
                 if secret_number == fridge.secret_number:
                     fridge.user = request.user
                     fridge.save()
-                    return redirect(reverse("main:fridge_list"))
+                    return redirect(reverse("main:my_fridge_list"))
                 else:
                     return redirect(reverse("main:fridge_list") + "?conf=err")
 
