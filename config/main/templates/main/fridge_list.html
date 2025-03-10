@@ -17,6 +17,23 @@
       padding: 12px 20px 12px 40px;
       border: 1px solid #ddd;
       margin-bottom: 12px;
+      border-radius: 10px; /* Aggiungi angoli arrotondati */
+    }
+
+    #fridge_list {
+      margin-top: 40px; /* Aggiungi spazio tra la barra di ricerca e la tabella */
+    }
+
+    #fridge_list td {
+      padding: 10px; /* Aggiungi padding alle celle della tabella */
+    }
+
+    #fridge_list td:last-child {
+      text-align: right; /* Allinea a destra il bottone "View Statistics" */
+    }
+
+    #fridge_list tr:hover {
+      background-color: #f2f2f2; /* Aggiungi effetto hover alle righe della tabella */
     }
     </style>
 
@@ -40,28 +57,31 @@
         </script>
     {% endif %}
 
+    <h1><b> {{ view.title }}:  {% if view.title == "Fridge List" %} {{ object_list.count }} {% if object_list.count != 1 %}Fridges{% else %}Fridge{% endif %} {% endif %}</b></h1>
     <br>
-    <input type="text" id="search_string" placeholder="Cerca per nome..." title="Cerca">
     <br>
+
+    <input type="text" id="search_string" placeholder="Search by serial number..." title="Search">
     <br>
 
     {% if object_list|length == 0 %}
         <h2>No registered fridge found</h2>
     {% else %}
-        <h2> {{ view.title }} {% if view.title == "Fridge List" %} {{ object_list.count }} {% if object_list.count != 1 %}fridges{% else %}fridge{% endif %} {% endif %}</h2>
-    {% endif %}
-    <br>
-
-    <table class="table table-borderless" id="fridge_list">
+        <table class="table table-borderless" id="fridge_list">
             <tbody>
                 {% for l in object_list %}
                     <tr>
-                        <td>{{ l.serial_number }}</td>
-                        <td><a href="{% url 'main:chart_data' l.pk %}" class="btn btn-info" role="button">Select</a></td>
+                        <td style="width: 70%;"><h4><b>Fridge n° {{ l.serial_number }}</b></h4></td>
+                        <td style="width: 30%; text-align: right;">
+                            <div class="col-md-12 col-sm-12 mb-0">
+                                <a href="{% url 'main:chart_data' l.pk %}" class="btn btn-lg btn-info rounded-pill shadow-lg w-100">View Statistics</a>
+                            </div>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
-    </table>
+        </table>
+    {% endif %}
 
     <br>
     <br>
@@ -76,9 +96,9 @@
 
         rows.forEach(row => {
           const firstTd = row.querySelector('td:first-child');
-          const anchorText = firstTd.querySelector('a').textContent.toLowerCase();
+          const fridgeText = firstTd.textContent.toLowerCase();
 
-          if (anchorText.includes(searchTerm)) {
+          if (fridgeText.includes(searchTerm)) {
             row.style.display = 'table-row';
           } else {
             row.style.display = 'none';
