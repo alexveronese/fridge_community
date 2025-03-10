@@ -43,6 +43,15 @@ class FridgeListView(ListView):
         return Fridge.objects.order_by("serial_number")
 
 
+class RegFridgeListView(ListView):
+    title = "Fridge List"
+    model = Fridge
+    template_name = "main/fridge_list.html"
+
+    def get_queryset(self):
+        user = self.request.user
+        return Fridge.objects.filter(user=None).order_by("serial_number")
+
 @login_required
 def addFridge(request, pk):
     fridge = get_object_or_404(Fridge, pk=pk)
