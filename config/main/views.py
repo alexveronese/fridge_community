@@ -24,7 +24,8 @@ class HomeView(TemplateView):
     template_name = 'main/home.html'
 
 # Operators views
-class CreateFridgeView(CreateView):
+class CreateFridgeView(GroupRequiredMixin,CreateView):
+    group_required = ["Operators"]
     title = "Register new Fridge"
     form_class = CreateFridgeForm
     template_name = "main/create_entry.html"
