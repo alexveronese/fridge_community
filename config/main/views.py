@@ -30,6 +30,10 @@ class CreateFridgeView(CreateView):
     template_name = "main/create_entry.html"
     success_url = reverse_lazy("main:home")
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 # Customers views
 class FridgeListView(ListView):
     title = "Fridge List"
@@ -54,7 +58,7 @@ def addFridge(request, pk):
                 if secret_number == fridge.secret_number:
                     fridge.user = request.user
                     fridge.save()
-                    return redirect(reverse("main:my_fridge_list"))
+                    return redirect(reverse("main:fridge_list"))
                 else:
                     return redirect(reverse("main:fridge_list") + "?conf=err")
 
