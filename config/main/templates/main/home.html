@@ -27,7 +27,15 @@
                     <div class="col-md-3 col-sm-4 mb-3">
                         <a href="{% url 'main:register_fridge' %}" class="btn btn-lg btn-secondary rounded-pill shadow-lg w-100">Register new Fridge</a>
                     </div>
+                {% else %}
+                    <div class="col-md-3 col-sm-4 mb-3">
+                        <a href="{% url 'main:register_fridge' %}" class="btn btn-lg btn-secondary rounded-pill shadow-lg w-100">Register new Fridge</a>
+                    </div>
+                    <div class="col-md-3 col-sm-4 mb-3">
+                        <a href="{% url 'main:fridge_list' %}" class="btn btn-lg btn-secondary rounded-pill shadow-lg w-100">Fridge List</a>
+                    </div>
                 {% endif %}
+
             {% else %}
                 <div class="col-md-3 col-sm-4 mb-3">
                     <a href="{% url 'register' %}" class="btn btn-lg btn-outline-success rounded-pill shadow-lg w-100">Register</a>
