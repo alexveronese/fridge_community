@@ -24,6 +24,6 @@ def init_groups():
     customers = Group.objects.get_or_create(name="Customers")
     customers_perms = []
 
-    manager = Group.objects.get_or_create(name="Managers")
-    managers_perms = []
+    operator = Group.objects.get_or_create(name="Operators")
+    operators_perms = []
     print("Groups initialized")
