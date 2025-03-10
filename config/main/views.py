@@ -30,9 +30,6 @@ class CreateFridgeView(CreateView):
     template_name = "main/create_entry.html"
     success_url = reverse_lazy("main:home")
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
 
 # Customers views
 class FridgeListView(ListView):
