@@ -100,10 +100,7 @@ def process_data(request):
         hum_in = data.get('hum_in')
         temp_out = data.get('temp_out')
         pot_val = data.get('pot_val')
-        alarm = 0
 
-        if not button_state and temp_in > 5:
-            alarm = 1
 
         fridge = get_object_or_404(Fridge, pk=fridge_id)
         if not fridge:
@@ -115,6 +112,16 @@ def process_data(request):
             pot_val = int(pot_val)
         except ValueError:
             return Exception("Errore dati")
+
+        if int(temp_in) > 5:
+            if int(button_state) == 0:
+                alarm = 1
+            else:
+                alarm = 0
+        else:
+            alarm = 0
+
+        # alarm = 1
 
         sfeed = SensorFeed(
             fridge=fridge,
@@ -158,6 +165,7 @@ def get_grafico(request, pk):
     if not fridge:
         fridge = Fridge.objects.create(serial_number=1, user=request.user.id)
 
+    """
     for i in range(1):
     #se non avete dati di sensori mettete questi
         sfeed = SensorFeed(
@@ -173,7 +181,7 @@ def get_grafico(request, pk):
             sfeed.save()
         except ValidationError as e:
             print("Validation Error", e)
-
+    """
 
     # Passa i dati di SensorFeed al template
     temp = []

@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-l^_9ftwsm48=swnk#tc0(gy!rdeh61nar9pt7io!1m1ip*34mp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['fridge-community.zapto.org', '127.0.0.1', '155.185.77.107', 'localhost']
+ALLOWED_HOSTS = ['fridge-community.zapto.org', '127.0.0.1', '155.185.77.107', 'localhost', '192.168.178.69']
 
 
 # Application definition

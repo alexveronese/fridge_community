@@ -90,7 +90,7 @@ class Bridge():
 
                     # se viene inviato il carattere di inizio
                     if connect == 0 and lastchar == b'\xff':
-                        print("Connesso, leggo i dati...")
+                        print("Connected, reading data...")
                         connect = 1
                         continue
 
@@ -104,25 +104,36 @@ class Bridge():
                             if len(self.inbuffer) < 3:  # ID + at least 1 data + footer
                                 print("Packet is too short, ignored")
                             else:
-                                self.useData()  # process data
-                                print("Alarm?")
-                                # Get data and send appropriate command
-                                dataAlarm = self.getData()
-                                if dataAlarm == '1':
-                                    self.ser.write(b'A')
-                                elif dataAlarm == '0':
-                                    self.ser.write(b'S')
+                                if current_time - lasttime >= 2:
+                                    self.useData()  # process data
+                                    print("Alarm?")
+
+                                    # Get data and send appropriate command
+                                    dataAlarm = self.getData()
+                                    print(dataAlarm)
+                                    if dataAlarm == True:
+                                        print('Yes')
+                                        self.ser.write(b'A')
+                                    elif dataAlarm == False:
+                                        print('No')
+                                        self.ser.write(b'S')
 
                             # clear the buffer
                             self.inbuffer = []
-
                         else:
                             self.inbuffer.append(lastchar)
 
             # If no serial data, still check if 2 seconds have passed
             elif current_time - lasttime >= 2:
-                print("no data")
-                break
+                dataAlarm = self.getData()
+                if dataAlarm == 'True':
+                    print('Yes')
+                    self.ser.write(b'A')
+                elif dataAlarm == 'False':
+                    print('No')
+                    self.ser.write(b'S')
+                lasttime = current_time
+
 
     def useData(self):
         # I have received a packet from the serial port. I can use it
