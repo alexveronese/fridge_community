@@ -4,7 +4,7 @@ SimpleDHT11 dht11;              //instantiates the SimpleDHT11 Object class to v
 const int buttonPin = 2;        //0 = fridge closed; 1 = fridge opened
 const int pinDHT11int = 5;      //front_view: signal, vcc, gnd
 const int pinDHT11ext = 6;
-const int BUZZER_PIN = 3;
+const int BUZZER_PIN = 9;
 const int MAX_TEMP = 7;
 const int ledPin = 10;
 
@@ -20,8 +20,8 @@ int conv_temperatureOut = 0;      // values casted to int
 int conv_humidityOut = 0;
 int potentiometerValue = 0;       // power consumption
 
-
 unsigned long timestamp;
+unsigned long timestamp_temp;
 unsigned long openFridgeTime;
 
 const byte arduinoID = 0x01;      // unique ID Arduino: change this for each device
@@ -29,31 +29,44 @@ const byte arduinoID = 0x01;      // unique ID Arduino: change this for each dev
 void setup() {
   Serial.begin(9600);
   timestamp = millis();
+  timestamp_temp = millis();
   openFridgeTime = millis();
   pinMode(buttonPin, INPUT);
   pinMode(BUZZER_PIN, OUTPUT);
+
 }
 
 void loop() {
   //read the button value
   buttonState = digitalRead(buttonPin);
+  //Serial.println(buttonState);
 
   //read the potentiometer value
   potentiometerValue = analogRead(A0);
   potentiometerValue = map(potentiometerValue, 0, 1023, 0, 253);
 
   //read internal temperature and humidity values
-  byte dataInt[40] = {0};
-  if (dht11.read2(pinDHT11int, &temperatureIn, &humidityIn, dataInt)) {
-    Serial.println("Read internal DHT11 failed");
-    return;
-  }
+  if(millis() - timestamp_temp > 2000) {
+      byte dataInt[40] = {0};
+      if (dht11.read2(pinDHT11int, &temperatureIn, &humidityIn, dataInt)) {
+        Serial.println("Read internal DHT11 failed\n");
+        return;
+      } else {
+        //Serial.println("OK in");
+        Serial.println(temperatureIn);
+      }
 
-  //read external temperature and humidity values
-  byte dataExt[40] = {0};
-  if (dht11.read2(pinDHT11ext, &temperatureOut, &humidityOut, dataExt)) {
-    Serial.print("Read external DHT11 failed");
-    return;
+      //read external temperature and humidity values
+      byte dataExt[40] = {0};
+      if (dht11.read2(pinDHT11ext, &temperatureOut, &humidityOut, dataExt)) {
+        Serial.print("Read external DHT11 failed\n");
+        return;
+      } else {
+        //Serial.println("OK out");
+        Serial.println(temperatureOut);
+      }
+
+      timestamp_temp = millis();
   }
 
   if(buttonState == 0){
@@ -61,20 +74,24 @@ void loop() {
   } else if(millis() - openFridgeTime > 10000){
       // until closed
       while(digitalRead(buttonPin)){
-          digitalWrite(BUZZER_PIN, HIGH);
+          tone(BUZZER_PIN, 500);
+          delay(500);
+          noTone(BUZZER_PIN);
+          delay(500);
+          tone(BUZZER_PIN, 100);
       }
-      digitalWrite(BUZZER_PIN,LOW);
+      noTone(BUZZER_PIN);
       openFridgeTime = millis();
   }
 
   if (Serial.available()) {
       int dataAlarm;
       dataAlarm = Serial.read();
-      if (dataAlarm == 'A') digitalWrite(10, HIGH);
-      if (dataAlarm =='S') digitalWrite(10, LOW);
+      if (dataAlarm == 'A') digitalWrite(ledPin, HIGH);
+      if (dataAlarm =='S') digitalWrite(ledPin, LOW);
   }
 
-  //se passa abbastanza tempo invio i dati
+
   if(millis() - timestamp > 5000){      //delay
     //just for debugging
     //Serial.println(temperatureIn);
