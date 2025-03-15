@@ -113,11 +113,8 @@ def process_data(request):
         except ValueError:
             return Exception("Errore dati")
 
-        if int(temp_in) > 5:
-            if int(button_state) == 0:
-                alarm = 1
-            else:
-                alarm = 0
+        if int(temp_in) > 5 and button_state == '0':
+            alarm = 1
         else:
             alarm = 0
 
