@@ -156,11 +156,11 @@ def get_grafico(request, pk):
 
     """
 
-    fridge = get_object_or_404(Fridge, pk=pk, user=request.user.id)
+    fridge = get_object_or_404(Fridge, pk=pk)
     # fridge = None
 
-    if not fridge:
-        fridge = Fridge.objects.create(serial_number=1, user=request.user.id)
+    #if not fridge:
+    #    fridge = Fridge.objects.create(serial_number=1, user=request.user.id)
 
     """
     for i in range(1):
