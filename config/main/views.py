@@ -199,7 +199,7 @@ def get_grafico(request, pk):
     hum = hum[::-1]
     pow_cons = pow_cons[::-1]
     time = time[::-1]
-    return render(request, 'main/chart_data.html', {'temp': temp, 'hum': hum, 'pow': pow_cons, 'time': time})
+    return render(request, 'main/chart_data.html', {'pk': pk, 'temp': temp, 'hum': hum, 'pow': pow_cons, 'time': time})
 
 
 
