@@ -1,0 +1,121 @@
+{% extends 'basebs.html' %}
+
+{% block title %} Alarms History {% endblock %}
+
+{% block header1 %}
+  <h1>Alarms History</h1>
+{% endblock %}
+
+{% block content %}
+
+    <style>
+    #search_string {
+      background-position: 10px 12px;
+      background-repeat: no-repeat;
+      width: 100%;
+      font-size: 16px;
+      padding: 12px 20px 12px 40px;
+      border: 1px solid #ddd;
+      margin-bottom: 12px;
+      border-radius: 10px; /* Aggiungi angoli arrotondati */
+    }
+
+    #fridge_list {
+      margin-top: 40px; /* Aggiungi spazio tra la barra di ricerca e la tabella */
+    }
+
+    #fridge_list td {
+      padding: 10px; /* Aggiungi padding alle celle della tabella */
+    }
+
+    #fridge_list td:last-child {
+      text-align: right; /* Allinea a destra il bottone "View Statistics" */
+    }
+
+    #fridge_list tr:hover {
+      background-color: #f2f2f2; /* Aggiungi effetto hover alle righe della tabella */
+    }
+    </style>
+
+    {% if "err" in request.GET.conf  %}
+        <div id="info" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p>You've typed a wrong secret number or the fridge is already assigned!</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function(){
+                $("#info").modal('show');
+            });
+        </script>
+    {% endif %}
+
+    <h1><b> {{ view.title }}:  {% if view.title == "Fridge List" %} {{ object_list.count }} {% if object_list.count != 1 %}Fridges{% else %}Fridge{% endif %} {% endif %}</b></h1>
+    <br>
+    <br>
+
+    <input type="text" id="search_string" placeholder="Search by serial number..." title="Search">
+    <br>
+
+    {% if alarms|length == 0 %}
+        <h2>No registered alarms found</h2>
+    {% else %}
+        <h4><b>Fridge n° {{ pk }}</b></h4>
+        <table class="table table-borderless" id="fridge_list">
+            <tbody>
+            <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Door</th>
+                  <th>Internal T</th>
+                  <th>Internal H</th>
+                  <th>External T</th>
+                  <th>Power</th>
+                </tr>
+            </thead>
+            {% for a in alarms %}
+                    <tr>
+                        <th>a.timestamp</th>
+                        <th>a.door</th>
+                        <th>a.int_temp</th>
+                        <th>a.int_hum</th>
+                        <th>a.ext_temp</th>
+                        <th>a.power_consumption</th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <br>
+    <br>
+
+    <script>
+      const searchInput = document.getElementById('search_string');
+      const tableBody = document.querySelector('tbody');
+
+      searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const rows = tableBody.querySelectorAll('tr');
+
+        rows.forEach(row => {
+          const firstTd = row.querySelector('td:first-child');
+          const fridgeText = firstTd.textContent.toLowerCase();
+
+          if (fridgeText.includes(searchTerm)) {
+            row.style.display = 'table-row';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    </script>
+
+{% endblock %}
