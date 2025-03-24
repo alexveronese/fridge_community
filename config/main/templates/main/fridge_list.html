@@ -73,9 +73,19 @@
                     <tr>
                         <td style="width: 70%;"><h4><b>Fridge n° {{ l.serial_number }}</b></h4></td>
                         <td style="width: 30%; text-align: right;">
-                            <div class="col-md-12 col-sm-12 mb-0">
-                                <a href="{% url 'main:add_fridge' l.pk %}" class="btn btn-lg btn-info rounded-pill shadow-lg w-100">Add Fridge</a>
-                            </div>
+                            {% if "Operators" in user.groups.all.0.name %}
+                                {% if not l.user %}
+                                    <h4 class="text-success">Free</h4>
+                                {% else %}
+                                    <div class="col-md-12 col-sm-12 mb-0">
+                                    <a href="{% url 'main:chart_data' l.pk %}" class="btn btn-lg btn-info rounded-pill shadow-lg w-100">View Stats</a>
+                                    </div>
+                                {% endif %}
+                            {%  else %}
+                                <div class="col-md-12 col-sm-12 mb-0">
+                                    <a href="{% url 'main:add_fridge' l.pk %}" class="btn btn-lg btn-info rounded-pill shadow-lg w-100">Add Fridge</a>
+                                </div>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

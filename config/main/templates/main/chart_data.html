@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sensor Monitoring</title>
+{% extends 'basebs.html' %}
+{% block title %} Statistics {% endblock %}
+{% block content %}
+{% load static %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>// Ricarica la pagina ogni 5 secondi
         setTimeout(function () {
@@ -13,7 +11,7 @@
         /* Sfondo uniforme */
         body {
             margin: 0;
-            background: linear-gradient(135deg, #f5f7fa, #e3f2fd);
+            background: white;
             font-family: 'Arial', sans-serif;
             color: #333;
         }
@@ -54,12 +52,11 @@
             height: 400px; /* Altezza fissa */
         }
     </style>
-</head>
-<body>
+
 
 <div class="main-container">
     <!-- Titoli principali -->
-    <h1>Sensor Monitoring Dashboard</h1>
+    <h1>Sensors Monitoring Dashboard</h1>
     <h2 class="chart-title">Internal Temperature (°C)</h2>
     <div class="chart-container">
         <canvas id="temperatureChart"></canvas>
@@ -203,5 +200,4 @@
    });
 </script>
 
-</body>
-</html>
+{% endblock  %}

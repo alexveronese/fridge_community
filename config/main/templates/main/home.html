@@ -23,18 +23,27 @@
                         <a href="/admin/" class="btn btn-lg btn-primary rounded-pill shadow-lg w-100">Admin Page</a>
                     </div>
                     <div class="col-md-3 col-sm-4 mb-3">
-                        <a href="{% url 'registerop' %}" class="btn btn-lg btn-secondary rounded-pill shadow-lg w-100">Register new Operator</a>
+                        <a href="{% url 'registerop' %}" class="btn btn-lg btn-warning rounded-pill shadow-lg w-100">Register new Operator</a>
                     </div>
-                    <div class="col-md-3 col-sm-4 mb-3">
-                        <a href="{% url 'main:regfridge_list' %}" class="btn btn-lg btn-secondary rounded-pill shadow-lg w-100">Register new Fridge</a>
-                    </div>
-                {% else %}
                     <div class="col-md-3 col-sm-4 mb-3">
                         <a href="{% url 'main:regfridge_list' %}" class="btn btn-lg rounded-pill shadow-lg w-100" style="background-color: #e68612; color: #fff; border-color: #FFA07A;">Register new Fridge</a>
                     </div>
-                    <div class="col-md-3 col-sm-4 mb-3">
-                        <a href="{% url 'main:my_fridge_list' %}" class="btn btn-lg rounded-pill shadow-lg w-100" style="background-color: #bf50bd; color: #fff; border-color: #7A288A;">My Fridge List</a>
-                    </div>
+                {% else %}
+                    {% if "Operators" in user.groups.all.0.name %}
+                        <div class="col-md-3 col-sm-4 mb-3">
+                        <a href="{% url 'main:register_fridge' %}" class="btn btn-lg rounded-pill shadow-lg w-100" style="background-color: #e68612; color: #fff; border-color: #FFA07A;">Register new Fridge</a>
+                        </div>
+                        <div class="col-md-3 col-sm-4 mb-3">
+                            <a href="{% url 'main:fridge_list' %}" class="btn btn-lg rounded-pill shadow-lg w-100" style="background-color: #bf50bd; color: #fff; border-color: #7A288A;">Fridge List</a>
+                        </div>
+                    {% else %}
+                        <div class="col-md-3 col-sm-4 mb-3">
+                            <a href="{% url 'main:regfridge_list' %}" class="btn btn-lg rounded-pill shadow-lg w-100" style="background-color: #e68612; color: #fff; border-color: #FFA07A;">Register new Fridge</a>
+                        </div>
+                        <div class="col-md-3 col-sm-4 mb-3">
+                            <a href="{% url 'main:my_fridge_list' %}" class="btn btn-lg rounded-pill shadow-lg w-100" style="background-color: #bf50bd; color: #fff; border-color: #7A288A;">My Fridge List</a>
+                        </div>
+                    {% endif %}
                 {% endif %}
 
             {% else %}
