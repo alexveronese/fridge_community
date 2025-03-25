@@ -417,6 +417,9 @@ def notify_telegram_bot(message: str, chat_id: int):
 
 def get_alarm_history(request, pk):
     fridge = get_object_or_404(Fridge, pk=pk)
-    alarms = SensorFeed.objects.filter(alarm_temp=True, Fridge=fridge).order_by('timestamp')
+    try:
+        alarms = SensorFeed.objects.filter(alarm_temp=True, fridge=fridge).order_by('-timestamp')
+    except SensorFeed.DoesNotExist:
+        alarms = []
     return render(request, 'main/alarms_history.html', {'pk': pk, 'alarms': alarms})
 
