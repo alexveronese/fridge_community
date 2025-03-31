@@ -73,9 +73,9 @@
                     <tr>
                         <td style="width: 70%;"><h4><b>Fridge n° {{ l.serial_number }}</b></h4></td>
                         <td style="width: 30%; text-align: right;">
-                            <div class="col-md-12 col-sm-12 mb-0">
-                                <a href="{% url 'main:chart_data' l.pk %}" class="btn btn-lg btn-info rounded-pill shadow-lg w-100">View Stats</a>
-                                <a href="{% url 'main:alarms_history' l.pk %}" class="btn btn-lg btn-info rounded-pill shadow-lg w-100">Alarms History</a>
+                            <div style="display: flex; gap: 10px;">
+                                <a href="{% url 'main:chart_data' l.pk %}" class="btn btn-lg btn-info rounded-pill shadow-lg">View Stats</a>
+                                <a href="{% url 'main:alarms_history' l.pk %}" class="btn btn-lg btn-warning rounded-pill shadow-lg">Alarms History</a>
                             </div>
                         </td>
                     </tr>
