@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from config.main.views import notify_telegram_bot
 
 
 class Fridge(models.Model):
@@ -52,41 +51,4 @@ BOT_TOKEN = "7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"  # Replace with you
 BOT_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
 
-ACCEPTABLE_RANGES = {
-    'int_temp': (0, 10),  
-    'ext_temp': (0, 35),  
-    'int_hum': (30, 70),  
-    'ext_hum': (30, 70),  
-    'power_consumption': (0, 1000),
-}
 
-
-@receiver(post_save, sender=SensorFeed)
-def send_telegram_notification(sender, instance, created, **kwargs):
-    if created:
-        fridge_serial_number = instance.fridge.serial_number
-        try:
-
-            telegram_user = TelegramUser.objects.get(fridge_id=fridge_serial_number)
-            out_of_range_values = []
-            sensor_feed_list = SensorFeed.objects.values().filter(fridge=instance.fridge).order_by('-timestamp')
-            sensor_feed = sensor_feed_list[2] if len(sensor_feed_list) > 1 else None
-            if instance.door and sensor_feed.door:
-                out_of_range_values.append("🚪Door is open")
-            if not (ACCEPTABLE_RANGES['int_temp'][0] <= instance.int_temp <= ACCEPTABLE_RANGES['int_temp'][1]) and instance.door:
-                out_of_range_values.append(f"🌡️Internal temperature: {instance.int_temp}°C")
-            if not (ACCEPTABLE_RANGES['ext_temp'][0] <= instance.ext_temp <= ACCEPTABLE_RANGES['ext_temp'][1]):
-                out_of_range_values.append(f"🌡External temperature: {instance.ext_temp}°C")
-            if not (ACCEPTABLE_RANGES['int_hum'][0] <= instance.int_hum <= ACCEPTABLE_RANGES['int_hum'][1]):
-                out_of_range_values.append(f"💧Internal humidity: {instance.int_hum}%")
-            if not (ACCEPTABLE_RANGES['ext_hum'][0] <= instance.ext_hum <= ACCEPTABLE_RANGES['ext_hum'][1]):
-                out_of_range_values.append(f"❄️External humidity: {instance.ext_hum}%")
-            if not (ACCEPTABLE_RANGES['power_consumption'][0] <= instance.power_consumption <= ACCEPTABLE_RANGES['power_consumption'][1]):
-                out_of_range_values.append(f"⚡Power consumption: {instance.power_consumption}W")
-
-            if out_of_range_values:
-                message = f"⚠️New sensor feed added for fridge {fridge_serial_number} with out-of-range values:\n" + "\n".join(out_of_range_values) + "\nPlease check the fridge.⚠️"
-                notify_telegram_bot(message, telegram_user.chat_id)
-
-        except TelegramUser.DoesNotExist:
-            pass

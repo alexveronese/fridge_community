@@ -2,7 +2,7 @@ import json
 import random
 from typing import Any
 
-import requests
+import requests as rq
 from django.core.exceptions import ValidationError
 from django.db.models import QuerySet
 from django.http import JsonResponse, HttpResponse
@@ -12,14 +12,15 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, DetailView, TemplateView, ListView
 from django.contrib.auth.decorators import login_required
 from braces.views import GroupRequiredMixin, LoginRequiredMixin
-from urllib3 import request
 
 from .forms import CreateFridgeForm, AddFridgeForm
 from .models import *
 import pandas as pd
 import joblib
 
-
+# Telegram Bot Configuration
+BOT_TOKEN = "7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"  # Replace with your actual bot token
+BOT_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 class HomeView(TemplateView):
     template_name = 'main/home.html'
 
@@ -136,15 +137,10 @@ def process_data(request):
             print("Validation Error", e)
 
 
-        # alarm
-        url = "https://api.telegram.org/bot7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
-        """
-        if alarm[0]:
-            # temperatureIN too high
-            x = requests.post(url + "/notify", data=sfeed.int_temp) # cambiare nome "/notify" con metodo del bot
-        """
-
         print(f"Dati ricevuti: {data}") # debug
+
+        send_telegram_notification(sfeed)
+
         return HttpResponse('Ok')
 
 
@@ -162,7 +158,7 @@ def get_grafico(request, pk):
     #if not fridge:
     #    fridge = Fridge.objects.create(serial_number=1, user=request.user.id)
 
-    """
+
     for i in range(1):
     #se non avete dati di sensori mettete questi
         sfeed = SensorFeed(
@@ -178,7 +174,7 @@ def get_grafico(request, pk):
             sfeed.save()
         except ValidationError as e:
             print("Validation Error", e)
-    """
+
 
     # Passa i dati di SensorFeed al template
     temp = []
@@ -202,16 +198,6 @@ def get_grafico(request, pk):
     return render(request, 'main/chart_data.html', {'pk': pk, 'temp': temp, 'hum': hum, 'pow': pow_cons, 'time': time})
 
 
-
-def send_data_TELEGRAM(alarm, sfeed):
-
-
-    url = "https://api.telegram.org/bot7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
-    if alarm[0]:
-        # temperatureIN too high
-        message = 'Ciao! Questo è un messaggio dal bot.'
-        data = {'chat_id': 1, 'text': message}
-        x = requests.post(url + "/sendMessage",data=data) # cambiare nome "/notify" con metodo del bot
 
 
 def predict(external_temp, internal_temp_variation, door_open_time):
@@ -283,10 +269,6 @@ def process_bot_predict(request, pk):
 
 
 
-# Telegram Bot Configuration
-BOT_TOKEN = "7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
-BOT_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-
 
 @csrf_exempt
 def store_chat_id(request):
@@ -315,25 +297,13 @@ def store_chat_id(request):
 
 
 
-def notify_telegram_bot(message: str, chat_id: int):
-    """
-    Send a notification to the user via Telegram bot.
-    """
-    payload = {
-        'chat_id': chat_id,
-        'text': message
-    }
-    response = requests.post(BOT_API_URL, json=payload)
-    return response.status_code
 
 
 
 
 
 
-# Telegram Bot Configuration
-BOT_TOKEN = "7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"
-BOT_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+
 
 
 @csrf_exempt
@@ -411,7 +381,8 @@ def notify_telegram_bot(message: str, chat_id: int):
         'chat_id': chat_id,
         'text': message
     }
-    response = requests.post(BOT_API_URL, json=payload)
+    response = rq.post(BOT_API_URL,json=payload)
+
     return response.status_code
 
 
@@ -423,3 +394,50 @@ def get_alarm_history(request, pk):
         alarms = []
     return render(request, 'main/alarms_history.html', {'pk': pk, 'alarms': alarms})
 
+
+
+ACCEPTABLE_RANGES = {
+    'int_temp': (0, 10),
+    'ext_temp': (0, 35),
+    'int_hum': (30, 70),
+    'ext_hum': (30, 70),
+    'power_consumption': (0, 1000),
+}
+
+#def send_telegram_notification(sender, instance, created, **kwargs):
+@receiver(post_save, sender=SensorFeed)
+def send_telegram_notification(instance, **kwargs):
+    #if created:
+    fridge_serial_number = instance.fridge.serial_number
+    try:
+
+        telegram_user = TelegramUser.objects.get(fridge_id=fridge_serial_number)
+        out_of_range_values = []
+        sensor_feed_list = SensorFeed.objects.values().filter(fridge=instance.fridge).order_by('-timestamp')
+        if len(sensor_feed_list) > 1:
+            sensor_feed = SensorFeed(
+                int_temp=sensor_feed_list[2]['int_temp'],
+                door=sensor_feed_list[2]['door'],
+                int_hum=sensor_feed_list[2]['int_hum'],
+                ext_temp=sensor_feed_list[2]['ext_temp'],
+                power_consumption=sensor_feed_list[2]['power_consumption']
+            )
+        else:
+            sensor_feed = None
+        if instance.door and sensor_feed.door:
+            out_of_range_values.append("🚪Door is open")
+        if not (ACCEPTABLE_RANGES['int_temp'][0] <= instance.int_temp <= ACCEPTABLE_RANGES['int_temp'][1]) and instance.door:                out_of_range_values.append(f"🌡️Internal temperature: {instance.int_temp}°C")
+        if not (ACCEPTABLE_RANGES['ext_temp'][0] <= instance.ext_temp <= ACCEPTABLE_RANGES['ext_temp'][1]):
+            out_of_range_values.append(f"🌡External temperature: {instance.ext_temp}°C")
+        if not (ACCEPTABLE_RANGES['int_hum'][0] <= instance.int_hum <= ACCEPTABLE_RANGES['int_hum'][1]):                out_of_range_values.append(f"💧Internal humidity: {instance.int_hum}%")
+        if not (ACCEPTABLE_RANGES['ext_hum'][0] <= instance.ext_hum <= ACCEPTABLE_RANGES['ext_hum'][1]):
+            out_of_range_values.append(f"❄️External humidity: {instance.ext_hum}%")
+        if not (ACCEPTABLE_RANGES['power_consumption'][0] <= instance.power_consumption <= ACCEPTABLE_RANGES['power_consumption'][1]):
+            out_of_range_values.append(f"⚡Power consumption: {instance.power_consumption}W")
+
+        if out_of_range_values:
+            message = f"⚠️New sensor feed added for fridge {fridge_serial_number} with out-of-range values:\n" + "\n".join(out_of_range_values) + "\nPlease check the fridge.⚠️"
+            notify_telegram_bot(message, telegram_user.chat_id)
+
+    except TelegramUser.DoesNotExist:
+        pass
