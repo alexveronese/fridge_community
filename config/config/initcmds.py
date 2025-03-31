@@ -31,7 +31,7 @@ def init_db():
             u.save()
 
         print("Creating Operators")
-        m = User.objects.create_user(username="Operator1", password="samplepw1!")
+        m = User.objects.create_user(username="operator1", password="samplepw1!")
         g = Group.objects.get(name="Operators")
         g.user_set.add(m)
 
