@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from config.main.views import notify_telegram_bot
+
 
 class Fridge(models.Model):
     serial_number = models.PositiveIntegerField(validators=[MinValueValidator(0), MaxValueValidator(253)], primary_key=True)
@@ -68,7 +70,7 @@ def send_telegram_notification(sender, instance, created, **kwargs):
             telegram_user = TelegramUser.objects.get(fridge_id=fridge_serial_number)
             out_of_range_values = []
             sensor_feed_list = SensorFeed.objects.values().filter(fridge=instance.fridge).order_by('-timestamp')
-            sensor_feed = sensor_feed_list[1] if len(sensor_feed_list) > 1 else None
+            sensor_feed = sensor_feed_list[2] if len(sensor_feed_list) > 1 else None
             if instance.door and sensor_feed.door:
                 out_of_range_values.append("🚪Door is open")
             if not (ACCEPTABLE_RANGES['int_temp'][0] <= instance.int_temp <= ACCEPTABLE_RANGES['int_temp'][1]) and instance.door:
