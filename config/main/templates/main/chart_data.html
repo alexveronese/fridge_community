@@ -1,5 +1,5 @@
 {% extends 'basebs.html' %}
-{% block title %} Statistics {% endblock %}
+{% block title %} Statistics Fridge n° {{ pk }}{% endblock %}
 {% block content %}
 {% load static %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,7 +12,6 @@
         body {
             margin: 0;
             background: white;
-            font-family: 'Arial', sans-serif;
             color: #333;
         }
 
@@ -53,11 +52,9 @@
         }
     </style>
 
-
 <div class="main-container">
     <!-- Titoli principali -->
-    <h1>Fridge n° {{ pk }}</h1>
-    <h1>Sensors Monitoring Dashboard</h1>
+    <h1>Sensors Monitoring Dashboard: Fridge n° {{ pk }}</h1>
     <h2 class="chart-title">Internal Temperature (°C)</h2>
     <div class="chart-container">
         <canvas id="temperatureChart"></canvas>
