@@ -17,21 +17,13 @@ class Fridge(models.Model):
 
 class SensorFeed(models.Model):
     fridge = ForeignKey(Fridge, on_delete=models.CASCADE)
-
     door = models.BooleanField(default=False)
     int_temp = models.IntegerField(default=0)
     int_hum = models.IntegerField(default=0)
     ext_temp = models.IntegerField(default=0)
-    ext_hum = models.IntegerField(default=0)
     power_consumption = models.IntegerField(default=0)
     alarm_temp = models.BooleanField(default=False)
-
     timestamp = models.DateTimeField(auto_now_add=True)
-
-"""
-class Anomaly(models.Model):
-    fridge = ForeignKey(Fridge, on_delete=models.CASCADE)
-"""
 
 class TelegramUser(models.Model):
     chat_id = models.BigIntegerField(unique=True)  # Unique Telegram chat ID
