@@ -1,6 +1,7 @@
 import json
 import random
 from typing import Any
+from xml.sax.handler import version
 
 import requests as rq
 from django.core.exceptions import ValidationError
@@ -17,6 +18,7 @@ from .forms import CreateFridgeForm, AddFridgeForm
 from .models import *
 import pandas as pd
 import joblib
+
 
 # Telegram Bot Configuration
 BOT_TOKEN = "7953385844:AAHapKUAmpOs6OSml9S5X8Zg-0xmLO8GX6A"  # Replace with your actual bot token
@@ -158,7 +160,7 @@ def get_grafico(request, pk):
     #if not fridge:
     #    fridge = Fridge.objects.create(serial_number=1, user=request.user.id)
 
-
+    """
     for i in range(1):
     #se non avete dati di sensori mettete questi
         sfeed = SensorFeed(
@@ -174,7 +176,7 @@ def get_grafico(request, pk):
             sfeed.save()
         except ValidationError as e:
             print("Validation Error", e)
-
+    """
 
     # Passa i dati di SensorFeed al template
     temp = []
@@ -208,13 +210,15 @@ def predict(external_temp, internal_temp_variation, door_open_time):
              other --> Bad }
 
     """
-    new_data = pd.DataFrame({
+    new_data = pd.DataFrame(data={
         'external_temp': external_temp,
         'internal_temp_variation': internal_temp_variation,
         'door_open_time': door_open_time
-    })
+    }, index=[0, 1, 2])
 
-    clf_loaded=joblib.load('random_forest_model.pkl')
+    print(type(door_open_time))
+
+    clf_loaded=joblib.load('C:\\Users\\veron\\Desktop\\Uni\\LM\\1_ANNO\\1_SEM\\IOT\\fridge_community\\config\\main\\random_forest_model.pkl')
 
     # Prediction on new data
     prediction = clf_loaded.predict(new_data)
@@ -236,7 +240,6 @@ def send_alarm(request, pk):
     """
     fridge = get_object_or_404(Fridge, pk=pk)
     alarm = SensorFeed.objects.filter(fridge=fridge).order_by('timestamp').reverse()[0]
-    print(alarm.alarm_temp)
     if request.method == 'GET':
         return JsonResponse(data={'value': alarm.alarm_temp})
 
@@ -253,19 +256,21 @@ def process_bot_predict(request, pk):
         last = sfeed[0]
         first = None
         for feed in sfeed:
-            if not feed.button_state:
+            if not feed.door:
                 first = feed
                 break
+
         if first is None:
             first = sfeed[len(sfeed) - 1]
 
         time_opened = last.timestamp - first.timestamp
+        time_opened_float = time_opened.total_seconds()
 
         var = abs(last.int_temp - first.int_temp)
 
-        pred = predict(last.ext_temp, var, time_opened)
+        pred = predict(last.ext_temp, var, time_opened_float)
 
-        return JsonResponse(data={'value': pred})
+        return JsonResponse(data={'value': str(pred)})
 
 
 
@@ -361,7 +366,6 @@ def get_least_recent_data(request):
                     'int_temp': sensor_feed.get('int_temp'),
                     'int_hum': sensor_feed.get('int_hum'),
                     'ext_temp': sensor_feed.get('ext_temp'),
-                    'ext_hum': sensor_feed.get('ext_hum'),
                     'power_consumption': sensor_feed.get('power_consumption'),
                 }
                 return JsonResponse(response_data)
@@ -399,8 +403,7 @@ def get_alarm_history(request, pk):
 ACCEPTABLE_RANGES = {
     'int_temp': (0, 10),
     'ext_temp': (0, 35),
-    'int_hum': (30, 70),
-    'ext_hum': (30, 70),
+    'int_hum': (20, 70),
     'power_consumption': (0, 1000),
 }
 
@@ -430,8 +433,6 @@ def send_telegram_notification(instance, **kwargs):
         if not (ACCEPTABLE_RANGES['ext_temp'][0] <= instance.ext_temp <= ACCEPTABLE_RANGES['ext_temp'][1]):
             out_of_range_values.append(f"🌡External temperature: {instance.ext_temp}°C")
         if not (ACCEPTABLE_RANGES['int_hum'][0] <= instance.int_hum <= ACCEPTABLE_RANGES['int_hum'][1]):                out_of_range_values.append(f"💧Internal humidity: {instance.int_hum}%")
-        if not (ACCEPTABLE_RANGES['ext_hum'][0] <= instance.ext_hum <= ACCEPTABLE_RANGES['ext_hum'][1]):
-            out_of_range_values.append(f"❄️External humidity: {instance.ext_hum}%")
         if not (ACCEPTABLE_RANGES['power_consumption'][0] <= instance.power_consumption <= ACCEPTABLE_RANGES['power_consumption'][1]):
             out_of_range_values.append(f"⚡Power consumption: {instance.power_consumption}W")
 
