@@ -7,7 +7,11 @@
 {% endblock %}
 
 {% block content %}
-
+    <script>// Ricarica la pagina ogni 5 secondi
+        setTimeout(function () {
+            location.reload(true);
+        }, 5000); // 5000 millisecondi = 5 secondi
+    </script>
     <style>
     #search_string {
       background-position: 10px 12px;
