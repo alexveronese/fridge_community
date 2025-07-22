@@ -1,4 +1,5 @@
 # Smart Fridge Monitoring System
+<img width="423" height="173" alt="Screenshot 2025-07-22 alle 13 33 49" src="https://github.com/user-attachments/assets/2022d39e-989e-4a09-a6a4-2ab1f0d278f8" />
 
 A comprehensive IoT solution for monitoring and managing smart refrigerators with real-time sensor data collection, web dashboard, and Telegram bot integration.
 
