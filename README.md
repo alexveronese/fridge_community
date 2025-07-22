@@ -25,6 +25,9 @@ A comprehensive IoT solution for monitoring and managing smart refrigerators wit
 - **Real-time Notifications**: Instant Telegram notifications for out-of-range values
 - **LED Indicators**: Visual feedback system on Arduino hardware
 
+  <img width="414" height="233" alt="image" src="https://github.com/user-attachments/assets/8f2f2f42-c35f-4d88-a8e3-e2266a507358" />
+
+
 ## 🏗️ System Architecture
 
 ```
